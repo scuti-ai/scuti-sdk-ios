@@ -17,12 +17,9 @@ ScutiSDK is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'ScutiSDK'
+pod 'ScutiSDK', :git => 'https://github.com/scuti-ai/scuti-sdk-ios.git'
 ```
 
-## Author
-
-markgrossnickle, markgrossnickle@users.noreply.github.com
 
 ## License
 
