@@ -1,6 +1,6 @@
 # ScutiSDK
 
-[![CI Status](https://img.shields.io/travis/markgrossnickle/ScutiSDK.svg?style=flat)](https://travis-ci.org/markgrossnickle/ScutiSDK)
+[![CI Status](https://img.shields.io/travis/Mark Grossnickle/ScutiSDK.svg?style=flat)](https://travis-ci.org/Mark Grossnickle/ScutiSDK)
 [![Version](https://img.shields.io/cocoapods/v/ScutiSDK.svg?style=flat)](https://cocoapods.org/pods/ScutiSDK)
 [![License](https://img.shields.io/cocoapods/l/ScutiSDK.svg?style=flat)](https://cocoapods.org/pods/ScutiSDK)
 [![Platform](https://img.shields.io/cocoapods/p/ScutiSDK.svg?style=flat)](https://cocoapods.org/pods/ScutiSDK)
@@ -17,9 +17,12 @@ ScutiSDK is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'ScutiSDK', :git => 'https://github.com/scuti-ai/scuti-sdk-ios.git'
+pod 'ScutiSDK'
 ```
 
+## Author
+
+Mark Grossnickle, markgrossnickle@users.noreply.github.com
 
 ## License
 

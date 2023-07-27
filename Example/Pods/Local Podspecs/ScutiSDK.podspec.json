@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "summary": "A short description of ScutiSDK.",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/markgrossnickle/ScutiSDK",
+  "homepage": "https://github.com/Mark Grossnickle/ScutiSDK",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "markgrossnickle": "markgrossnickle@users.noreply.github.com"
+    "Mark Grossnickle": "markgrossnickle@users.noreply.github.com"
   },
   "source": {
-    "git": "https://github.com/markgrossnickle/ScutiSDK.git",
+    "git": "https://github.com/Mark Grossnickle/ScutiSDK.git",
     "tag": "0.1.0"
   },
   "platforms": {

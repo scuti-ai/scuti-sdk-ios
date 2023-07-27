@@ -13,6 +13,7 @@ public struct ScutiWebView: UIViewRepresentable {
     
     var targetEnvironment:TargetEnvironment;
     var appId:String;
+    @StateObject public var showing = false;
     
     public func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -20,7 +21,8 @@ public struct ScutiWebView: UIViewRepresentable {
         let url = ScutiUtils.GetURL(id:appId, target: targetEnvironment)
         let request = URLRequest(url: url)
         webView.load(request)
-        context.coordinator.Hide();
+        webView.isHidden = true;
+        //context.coordinator.Hide();
         return webView
     }
     
@@ -34,7 +36,7 @@ public struct ScutiWebView: UIViewRepresentable {
     
     public class Coordinator: NSObject, WKNavigationDelegate {
         
-        var _notifier:ScutiModel = ScutiModel();
+        @EnvironmentObject notifier:ScutiModel = ScutiModel();
         var _webView:WKWebView?;
         
         public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -89,7 +91,7 @@ public struct ScutiWebView: UIViewRepresentable {
                 _notifier.rewardCount = dictionary?["payload"] as! Int;
                 break;
                 case "BACK_TO_THE_GAME":
-                Hide();
+                _notifier.exitRequest = true;
             case "STORE_IS_READY":
                 GetNewProducts();
                 GetNewRewards();
@@ -112,11 +114,13 @@ public struct ScutiWebView: UIViewRepresentable {
         public func Show()
         {
              _webView?.evaluateJavaScript("toggleStore(true);")
+            _webView?.isHidden = false;
         }
         
         public func Hide()
         {
              _webView?.evaluateJavaScript("toggleStore(false);")
+            _webView?.isHidden = true;
         }
     }
     

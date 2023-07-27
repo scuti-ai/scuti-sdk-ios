@@ -16,7 +16,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0BA092868C1CE90BAA875AAC /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -26,8 +25,9 @@
 		607FACE51AFB9204008FA782 /* ScutiSDK_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScutiSDK_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		6E37E39C1937B9FE078CC660 /* ScutiSDK.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = ScutiSDK.podspec; path = ../ScutiSDK.podspec; sourceTree = "<group>"; };
-		D98F6656903739393A175CC3 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		6EF9905655E7BC13C73537A1 /* ScutiSDK.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = ScutiSDK.podspec; path = ../ScutiSDK.podspec; sourceTree = "<group>"; };
+		C1956F38175A543323DC0885 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		E376B189C35EED5A0DEEA64D /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,9 +78,9 @@
 		607FACF51AFB993E008FA782 /* Podspec Metadata */ = {
 			isa = PBXGroup;
 			children = (
-				6E37E39C1937B9FE078CC660 /* ScutiSDK.podspec */,
-				0BA092868C1CE90BAA875AAC /* README.md */,
-				D98F6656903739393A175CC3 /* LICENSE */,
+				6EF9905655E7BC13C73537A1 /* ScutiSDK.podspec */,
+				E376B189C35EED5A0DEEA64D /* README.md */,
+				C1956F38175A543323DC0885 /* LICENSE */,
 			);
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
