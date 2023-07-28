@@ -8,10 +8,12 @@
 import Foundation
 
 public class ScutiModel: ObservableObject {
-    @Published var rewardCount: Int = 0
-    @Published var productCount: Int = 0
-    @Published var scutisExchanged: Int = 0
-    
-    @Published var exitRequest: Bool = false
-   
+    public init()
+    {
+        
+    }
+    @Published public var rewardCount: Int = 0
+    @Published public var productCount: Int = 0
+    @Published public var scutisExchanged: Int = 0
+    @Published public var exitRequest: Bool = false
 }

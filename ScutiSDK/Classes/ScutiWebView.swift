@@ -11,17 +11,20 @@ import SwiftUI
 
 public struct ScutiWebView: UIViewRepresentable {
     
+    
+    @EnvironmentObject  var scutiEvents:ScutiModel;
+    //@StateObject  var scutiEvents:ScutiModel = ScutiModel();
     var targetEnvironment:TargetEnvironment;
     var appId:String;
-    @StateObject public var showing = false;
     
     public func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
+        context.coordinator.SetEvents(scutiEvents: scutiEvents);
         let url = ScutiUtils.GetURL(id:appId, target: targetEnvironment)
         let request = URLRequest(url: url)
         webView.load(request)
-        webView.isHidden = true;
+       // webView.isHidden = true;
         //context.coordinator.Hide();
         return webView
     }
@@ -36,8 +39,11 @@ public struct ScutiWebView: UIViewRepresentable {
     
     public class Coordinator: NSObject, WKNavigationDelegate {
         
-        @EnvironmentObject notifier:ScutiModel = ScutiModel();
+        
+        var notifier:ScutiModel?;
         var _webView:WKWebView?;
+        
+       
         
         public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             _webView = webView;
@@ -58,6 +64,11 @@ public struct ScutiWebView: UIViewRepresentable {
                 }
             }
             decisionHandler(.allow)
+        }
+        
+        public func SetEvents(scutiEvents:ScutiModel)
+        {
+            notifier = scutiEvents;
         }
         
         public func MessageFromJS(webView:WKWebView, message:String)
@@ -81,17 +92,17 @@ public struct ScutiWebView: UIViewRepresentable {
                 break;
             case "SCUTI_EXCHANGE":
                 let innerDict = dictionary?["payload"] as! [String : Any];
-                _notifier.scutisExchanged = innerDict["currencyEarned"] as! Int;
+                notifier!.scutisExchanged = innerDict["currencyEarned"] as! Int;
                 break;
                 case "NEW_PRODUCTS":
                // _notifier.productCount;
-                _notifier.productCount = dictionary?["payload"] as! Int;
+                notifier!.productCount = dictionary?["payload"] as! Int;
                 break;
                 case "NEW_REWARDS":
-                _notifier.rewardCount = dictionary?["payload"] as! Int;
+                notifier!.rewardCount = dictionary?["payload"] as! Int;
                 break;
                 case "BACK_TO_THE_GAME":
-                _notifier.exitRequest = true;
+                notifier!.exitRequest = true;
             case "STORE_IS_READY":
                 GetNewProducts();
                 GetNewRewards();
