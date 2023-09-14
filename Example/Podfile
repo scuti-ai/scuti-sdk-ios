@@ -1,6 +1,0 @@
-use_frameworks!
-target 'ScutiSDK_Tests' do
-  pod 'ScutiSDK', :path => '../'
-  
-  
-end
