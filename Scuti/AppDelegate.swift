@@ -15,9 +15,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        do {
+            try ScutiSDKManager.shared.initializeSDK(environment: .production, appId: "6db28ef4-69b0-421a-9344-31318f898790")
+        } catch {
+            print("initializeSDK ex : \(error)")
+        }
         return true
     }
 
+    func applicationWillTerminate(_ application: UIApplication) {
+        ScutiSDKManager.shared.endSession()
+    }
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        ScutiSDKManager.shared.endSession()
+    }
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        ScutiSDKManager.shared.startSession()
+    }
     // MARK: UISceneSession Lifecycle
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {

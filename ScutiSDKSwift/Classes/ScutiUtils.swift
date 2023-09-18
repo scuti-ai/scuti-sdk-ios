@@ -7,37 +7,81 @@
 
 import Foundation
 
-
-public enum TargetEnvironment
-{
-    case Development
-    case Staging
-    case Production
-}
-extension TargetEnvironment {
-    func url(id: String) -> URL
+public class ScutiModel: ObservableObject {
+    public init()
     {
-        var result:String;
-        switch (self)
-        {
-        case TargetEnvironment.Development:
-            result = "https://dev.run.app.scuti.store/?gameId=\(id)&platform=Unity";
-        case TargetEnvironment.Staging:
-            result =  "https://staging.run.app.scuti.store/?gameId=\(id)&platform=Unity";
-        case TargetEnvironment.Production:
-            result = "https://store.scutishopping.com/?gameId=\(id)&platform=Unity";
-        }
-        let defaults = UserDefaults.standard
-        if let scutiToken = defaults.string(
-            forKey: "scuti_token"
-        ) {
-            result = result+"&token="+scutiToken;
-        }
         
-        return URL(string: result)!;
     }
+    @Published public var cntRewards: Int = 0
+    @Published public var cntNewProducts: Int = 0
+    @Published public var exchange: ScutiExchangeModel?
+    @Published public var exitScuti: Bool = false
+    @Published public var isStoreReady: Bool = false
 }
 
-class ScutiUtils
-{
+public struct ScutiExchangeModel: Decodable {
+    public var id: String
+    public var scutisSpent: Double
+    public var currencyEarned: Double
+    public var currencyName: String
+    
+//    func modelChange() -> ScutiExchange {
+//        return ScutiExchange(id: id, scutisSpent: scutisSpent, currencyEarned: currencyEarned, currencyName: currencyName)
+//    }
+}
+
+//@objc public class ScutiExchange: NSObject {
+//    public var id: String
+//    public var scutisSpent: Double
+//    public var currencyEarned: Double
+//    public var currencyName: String
+//
+//    init(id: String, scutisSpent: Double, currencyEarned: Double, currencyName: String) {
+//        self.id = id
+//        self.scutisSpent = scutisSpent
+//        self.currencyEarned = currencyEarned
+//        self.currencyName = currencyName
+//    }
+//}
+public protocol ScutiSDKManagerDelegate {
+    func onScutiButtonClicked()
+    func onStoreReady()
+    func onBackToGame()
+    func onNewProducts(cntProducts: Int)
+    func onNewRewards(cntRewards: Int)
+    func onScutiExchange(exchange: ScutiExchangeModel)
+    func onUserToken(userToken: String)
+    func onLogout()
+
+    func onErrorOccurred(error: Error)
+}
+public extension ScutiSDKManagerDelegate {
+    func onScutiButtonClicked() {
+        
+    }
+    func onStoreReady() {
+        
+    }
+    func onBackToGame() {
+        
+    }
+    func onNewProducts(cntProducts: Int) {
+        
+    }
+    func onNewRewards(cntRewards: Int) {
+        
+    }
+    func onScutiExchange(exchange: ScutiExchangeModel) {
+        
+    }
+    func onUserToken(userToken: String) {
+        
+    }
+    func onLogout() {
+        
+    }
+    func onErrorOccurred(error: Error) {
+        
+    }
+
 }
