@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 public struct ScutiButton: View {
-    let appBundle = Bundle(identifier:"com.scuti.ScutiSDKSwift")
+//    let appBundle = Bundle(identifier:"com.scuti.ScutiSDKSwift")
     let buttonRadius = 10.0
     
     @State private var showModal = false
@@ -33,13 +33,13 @@ public struct ScutiButton: View {
     }
     public var body: some View {
         ZStack(alignment: .topLeading) {
-            RoundedRectangle(cornerRadius: buttonRadius).foregroundColor(Color("button_background", bundle: appBundle))
+            RoundedRectangle(cornerRadius: buttonRadius).foregroundColor(Color(UIColor(red: 0.0546875, green: 0.046875, blue: 0.0625, alpha: 1)))
                 .overlay {
                     RoundedRectangle(cornerRadius: buttonRadius)
-                        .stroke(style: StrokeStyle(lineWidth: 4)).foregroundColor(Color("button_border", bundle: appBundle))
+                        .stroke(style: StrokeStyle(lineWidth: 4)).foregroundColor(Color(UIColor(red: 0.1171875, green: 0.20703125, blue: 0.93359375, alpha: 1)))
                 }
                 .overlay {
-                    Image("scuti_logo_white", bundle: appBundle)
+                    Image(uiImage: ScutiIcons.logo.image)
                 }
                 .padding(.leading, 80)
                 .padding(.trailing, 10)
@@ -57,7 +57,7 @@ public struct ScutiButton: View {
                     showModal = false
                 }
            HStack {
-                Image("new_item", bundle: appBundle)
+                Image(uiImage: ScutiIcons.newItem.image)
                     .resizable()
                     .frame(width: 94, height: 28)
                     .opacity(showNewItems ? 1 : 0)
@@ -66,7 +66,7 @@ public struct ScutiButton: View {
                     }
                 Spacer()
                 ZStack {
-                    Image("navstepperinactive", bundle: appBundle)
+                    Image(uiImage: ScutiIcons.newReward.image)
                         .resizable()
                     .frame(width: 30, height: 30)
                     Text("\(ScutiSDKManager.shared.scutiEvents.cntRewards)")
