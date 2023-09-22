@@ -21,8 +21,14 @@ Rewarded gCommerce marketplace built for gamers.
   s.author           = { 'MindTrust' => 'mindtrust@users.noreply.github.com' }
   s.source           = { :git => 'https://github.com/scuti-ai/scuti-sdk-ios.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '14.0'
-
+  s.ios.deployment_target = '15.0'
+  s.resource_bundles = {
+      'ScutiSDKSwift' => ['ScutiSDKSwift/*.png', 'ScutiSDKSwift/*.xcassets']
+  }
+#  s.resource_bundles = {
+#    'ScutiSDKSwift' => ['ScutiSDKSwift/**']
+#  }
+#  s.resources = 'ScutiSDKSwift/*.xcassets'
   s.source_files = 'ScutiSDKSwift/Classes/**/*'
   
 end

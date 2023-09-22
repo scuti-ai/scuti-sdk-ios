@@ -18,18 +18,18 @@ public struct ScutiButton: View {
 
     private var debouncedPublisherNewItems: AnyPublisher<Int, Never>
     private var debouncedPublisherNewRewards: AnyPublisher<Int, Never>
-    private var debouncedPublisherExitScuti: AnyPublisher<Bool, Never>
+    private var debouncedPublisherBackToGame: AnyPublisher<Bool, Never>
 
     public init() {
         debouncedPublisherNewItems = ScutiSDKManager.shared.scutiEvents.$cntNewProducts
-                    .debounce(for: 1, scheduler: RunLoop.main)
-                    .eraseToAnyPublisher()
+            .debounce(for: 0.1, scheduler: RunLoop.main)
+            .eraseToAnyPublisher()
         debouncedPublisherNewRewards = ScutiSDKManager.shared.scutiEvents.$cntRewards
-                    .debounce(for: 1, scheduler: RunLoop.main)
-                    .eraseToAnyPublisher()
-        debouncedPublisherExitScuti = ScutiSDKManager.shared.scutiEvents.$exitScuti
-                    .debounce(for: 1, scheduler: RunLoop.main)
-                    .eraseToAnyPublisher()
+            .debounce(for: 0.1, scheduler: RunLoop.main)
+            .eraseToAnyPublisher()
+        debouncedPublisherBackToGame = ScutiSDKManager.shared.scutiEvents.$backToGame
+            .debounce(for: 0.1, scheduler: RunLoop.main)
+            .eraseToAnyPublisher()
     }
     public var body: some View {
         ZStack(alignment: .topLeading) {
@@ -48,15 +48,15 @@ public struct ScutiButton: View {
                     showModal.toggle()
                     ScutiSDKManager.shared.toggleStore(showModal)
                 }
-                .sheet(isPresented: $showModal, onDismiss: {
+                .fullScreenCover(isPresented: $showModal, onDismiss: {
                     ScutiSDKManager.shared.toggleStore(false)
                 }) {
-                    ScutiWebView()
+                    ScutiWebView(scutiWebview: ScutiSDKManager.shared.scutiWebview)
                 }
-                .onReceive(debouncedPublisherExitScuti) { value in
+                .onReceive(debouncedPublisherBackToGame) { value in
                     showModal = false
                 }
-            HStack {
+           HStack {
                 Image("new_item", bundle: appBundle)
                     .resizable()
                     .frame(width: 94, height: 28)

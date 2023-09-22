@@ -16,15 +16,19 @@ public class ScutiSDKManager: NSObject {
     
     var targetEnvironment: TargetEnvironment = .development
     var appId: String = ""
-    let scutiWebview = WKWebView()
+    var scutiWebview : WKWebView
 
-//    @EnvironmentObject let scutiEvents = ScutiModel()
-    @ObservedObject var scutiEvents = ScutiModel()
-//    #if swift(>=5.3)
-//        @StateObject var scutiEvents = ScutiModel()
-//    #else
-//    #endif
+    @ObservedObject public var scutiEvents = ScutiModel()
     
+    var showingScutiWebViewController: UIViewController?
+    
+    override init() {
+        scutiWebview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
+//#if DEBUG
+//        self.scutiWebview.isInspectable = true
+//#endif
+
+    }
     public func initializeSDK(environment: TargetEnvironment, appId: String) throws {
         if !self.appId.isEmpty {
             throw ScutiError.alreadyInitialized
@@ -35,16 +39,34 @@ public class ScutiSDKManager: NSObject {
         targetEnvironment = environment
         self.appId = appId
         
-        scutiWebview.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 800))
+        if let scutiToken = UserDefaults.standard.string(forKey: "scuti_token") {
+            scutiEvents.userToken = scutiToken
+        }
+        _ = Task {
+            await self.loadWebViewData()
+        }
+    }
+    func loadWebViewData() async {
+//        try? await Task.sleep(nanoseconds: UInt64(0.5 * Double(NSEC_PER_SEC)))
         scutiWebview.navigationDelegate = self
-        let url = targetEnvironment.url(id: appId)
+        let url = targetEnvironment.url(id: appId, scutiToken: scutiEvents.userToken)
         let request = URLRequest(url: url)
         scutiWebview.load(request)
+    }
+    public func showScutiWebView(viewController: UIViewController) {
+        if showingScutiWebViewController != nil {
+            return
+        }
+        toggleStore(true)
+        showingScutiWebViewController = UIHostingController(rootView: ScutiWebView(scutiWebview: scutiWebview))
+        showingScutiWebViewController?.modalPresentationStyle = .fullScreen
+        viewController.present(showingScutiWebViewController!, animated: true)
     }
 }
 
 extension ScutiSDKManager : WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        print("======== webView didFinish : \(webView.url?.absoluteString ?? "")")
         let js = "window.Unity = { call: function(msg) { window.location = 'unity:' + msg; }  };";
 //        let js = """
 //if (window && window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.unityControl) {
@@ -91,7 +113,7 @@ extension ScutiSDKManager : WKNavigationDelegate {
         guard let msg = dictionary["message"] as? String else {
             return
         }
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ message: \(msg)");
+        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ message: \(msg) : \(dictionary["payload"] ?? "")");
         switch(msg)
         {
         case ScutiStoreMessage.USER_TOKEN.rawValue:
@@ -99,6 +121,7 @@ extension ScutiSDKManager : WKNavigationDelegate {
                 let defaults = UserDefaults.standard
                 defaults.set(token, forKey:"scuti_token")
                 defaults.synchronize()
+                scutiEvents.userToken = token
                 delegate?.onUserToken(userToken: token)
                 getNewProductsCommand();
                 getNewRewardsCommand();
@@ -108,7 +131,7 @@ extension ScutiSDKManager : WKNavigationDelegate {
             let defaults = UserDefaults.standard
             defaults.removeObject(forKey: "scuti_token")
             defaults.synchronize()
-            scutiEvents.isStoreReady = false
+            scutiEvents.userToken = nil
             delegate?.onLogout()
             break;
         case ScutiStoreMessage.SCUTI_EXCHANGE.rawValue:
@@ -136,8 +159,12 @@ extension ScutiSDKManager : WKNavigationDelegate {
             }
             break;
         case ScutiStoreMessage.BACK_TO_THE_GAME.rawValue:
-            scutiEvents.exitScuti = true
+            scutiEvents.backToGame = true
             delegate?.onBackToGame()
+            showingScutiWebViewController?.dismiss(animated: true, completion: {
+                self.toggleStore(false)
+                self.showingScutiWebViewController = nil
+            })
             break;
         case ScutiStoreMessage.STORE_IS_READY.rawValue:
             startSession()
@@ -156,32 +183,32 @@ extension ScutiSDKManager : WKNavigationDelegate {
 extension ScutiSDKManager {
     private func getNewProductsCommand()
     {
-        scutiWebview.evaluateJavaScript("getNewProducts();");
+        scutiWebview.evaluateJavaScript("getNewProducts();")
     }
     
     private func getNewRewardsCommand()
     {
-        scutiWebview.evaluateJavaScript("getNewRewards();");
+        scutiWebview.evaluateJavaScript("getNewRewards();")
     }
 
     func toggleStore(_ value: Bool)
     {
-        scutiWebview.evaluateJavaScript("toggleStore(\(value));");
+        scutiWebview.evaluateJavaScript("toggleStore(\(value));")
     }
 
     public func setGameUserId(_ userId: String)
     {
-        scutiWebview.evaluateJavaScript("setGameUserId(\(userId));");
+        scutiWebview.evaluateJavaScript("setGameUserId(\(userId));")
     }
 
     public func startSession()
     {
-        scutiWebview.evaluateJavaScript("startSession();");
+        scutiWebview.evaluateJavaScript("startSession();")
     }
 
     public func endSession()
     {
-        scutiWebview.evaluateJavaScript("endSession();");
+        scutiWebview.evaluateJavaScript("endSession();")
     }
 
 }

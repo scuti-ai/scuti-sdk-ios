@@ -23,7 +23,7 @@ public enum TargetEnvironment {
     case production
 }
 extension TargetEnvironment {
-    public func url(id: String) -> URL
+    public func url(id: String, scutiToken: String?) -> URL
     {
         var result:String;
         switch (self)

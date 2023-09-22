@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "04D1D0152AB0D4FC00A5796C"
-               BuildableName = "Scuti.app"
-               BlueprintName = "Scuti"
+               BuildableName = "ExampleScutiSwift.app"
+               BlueprintName = "ExampleScutiSwift"
                ReferencedContainer = "container:ScutiSDKSwift.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -68,8 +68,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04D1D0152AB0D4FC00A5796C"
-            BuildableName = "Scuti.app"
-            BlueprintName = "Scuti"
+            BuildableName = "ExampleScutiSwift.app"
+            BlueprintName = "ExampleScutiSwift"
             ReferencedContainer = "container:ScutiSDKSwift.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -85,8 +85,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04D1D0152AB0D4FC00A5796C"
-            BuildableName = "Scuti.app"
-            BlueprintName = "Scuti"
+            BuildableName = "ExampleScutiSwift.app"
+            BlueprintName = "ExampleScutiSwift"
             ReferencedContainer = "container:ScutiSDKSwift.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
