@@ -19,30 +19,15 @@ class ManualViewController: UIViewController {
         super.viewDidLoad()
 
 
-        // 1
-        let vc = UIHostingController(rootView: ScutiButton())
-
-        let scutiButtonView = vc.view!
+        let scutiButtonView = ScutiButton(frame: .zero)
         scutiButtonView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // 2
-        // Add the view controller to the destination view controller.
-        addChild(vc)
         view.addSubview(scutiButtonView)
-        
-        // 3
-        // Create and activate the constraints for the swiftui's view.
         NSLayoutConstraint.activate([
             view.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: scutiButtonView.trailingAnchor, constant: 10),
             view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: scutiButtonView.bottomAnchor, constant: 40),
             scutiButtonView.widthAnchor.constraint(equalToConstant: 260),
             scutiButtonView.heightAnchor.constraint(equalToConstant: 90),
         ])
-        
-        // 4
-        // Notify the child view controller that the move is complete.
-        vc.didMove(toParent: self)
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -90,5 +75,20 @@ extension ManualViewController: ScutiSDKManagerDelegate {
     func onUserToken(userToken: String) {
         lblUserAuthenticated.text = "User authenticated : YES"
         lblUserAuthenticated.textColor = .green
+    }
+    func onScutiButtonClicked() {
+        
+    }
+    
+    func onBackToGame() {
+        
+    }
+    
+    func onScutiExchange(exchange: ScutiSDKSwift.ScutiExchangeClass) {
+        
+    }
+    
+    func onErrorOccurred(error: Error) {
+        
     }
 }
