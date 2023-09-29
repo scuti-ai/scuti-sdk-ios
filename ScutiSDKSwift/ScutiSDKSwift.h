@@ -7,6 +7,10 @@
 
 #import <Foundation/Foundation.h>
 
+//#import "ScutiSDKManager-Swift.h"
+//#import <ScutiSDKSwift/ScutiSDKManager-Swift.h>
+//#import "ScutiSDKSwift-Swift.h"
+
 //! Project version number for ScutiSDKSwift.
 FOUNDATION_EXPORT double ScutiSDKSwiftVersionNumber;
 

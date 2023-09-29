@@ -6,16 +6,24 @@
 //
 
 import SwiftUI
+import ScutiSDKSwift
 
 struct ContentView: View {
+    @EnvironmentObject var scutiEvents: ScutiModel
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
-        .padding()
+        NavigationStack {
+             List {
+                 NavigationLink("Normal Usage", destination: NormalView()
+                    .environmentObject(ScutiSDKManager.shared.scutiEvents)
+                    .navigationTitle("Normal Usage"))
+                 NavigationLink("Custom Button Usage", destination: CustomView()
+                    .environmentObject(ScutiSDKManager.shared.scutiEvents)
+                    .navigationTitle("Custom Button Usage"))
+             }
+             .navigationTitle("Scuti Swift UI Example")
+             .navigationBarTitleDisplayMode(.inline)
+         }
     }
 }
 
@@ -24,3 +32,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+

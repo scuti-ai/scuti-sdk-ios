@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ScutiSDKSwift'
-  s.version          = '0.1.1'
+  s.version          = '0.0.1'
   s.summary          = 'Scuti SDK - gCommerce Marketplace'
 
   s.swift_versions = '5.0'
@@ -21,8 +21,7 @@ Rewarded gCommerce marketplace built for gamers.
   s.author           = { 'MindTrust' => 'mindtrust@users.noreply.github.com' }
   s.source           = { :git => 'https://github.com/scuti-ai/scuti-sdk-ios.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '14.0'
-
+  s.ios.deployment_target = '15.0'
   s.source_files = 'ScutiSDKSwift/Classes/**/*'
-  
+  s.resource_bundles = {'ScutiSDKSwift' => ['ScutiSDKSwift/Resources/*.*']}
 end
