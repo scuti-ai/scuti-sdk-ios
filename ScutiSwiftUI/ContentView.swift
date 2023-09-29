@@ -8,17 +8,22 @@
 import SwiftUI
 import ScutiSDKSwift
 
-struct ContentView: View, ScutiSDKManagerDelegate {
+struct ContentView: View {
     @EnvironmentObject var scutiEvents: ScutiModel
 
     var body: some View {
-        VStack {
-            Text("Store Ready : \(scutiEvents.isStoreReady ? "On" : "Off")").foregroundColor(scutiEvents.isStoreReady ? Color.green : Color.red)
-            Text("New Products : \(scutiEvents.cntNewProducts)").foregroundColor(.blue)
-            Text("New Rewards : \(scutiEvents.cntRewards)").foregroundColor(.green)
-            ScutiButton()
-                .frame(width: 260, height: 90)
-        }
+        NavigationStack {
+             List {
+                 NavigationLink("Normal Usage", destination: NormalView()
+                    .environmentObject(ScutiSDKManager.shared.scutiEvents)
+                    .navigationTitle("Normal Usage"))
+                 NavigationLink("Custom Button Usage", destination: CustomView()
+                    .environmentObject(ScutiSDKManager.shared.scutiEvents)
+                    .navigationTitle("Custom Button Usage"))
+             }
+             .navigationTitle("Scuti Swift UI Example")
+             .navigationBarTitleDisplayMode(.inline)
+         }
     }
 }
 

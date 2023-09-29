@@ -16,6 +16,10 @@
 		045D06D22AB3836700A6E890 /* ScutiWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D06D12AB3836700A6E890 /* ScutiWebView.swift */; };
 		045D06D32AB386D400A6E890 /* ScutiSDKSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D1CFF82AB0D4DA00A5796C /* ScutiSDKSwift.framework */; };
 		045D06D42AB386D400A6E890 /* ScutiSDKSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04D1CFF82AB0D4DA00A5796C /* ScutiSDKSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		049E4CF52AC5FB4300DE8632 /* NormalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E4CF32AC5FAF400DE8632 /* NormalView.swift */; };
+		049E4CF92AC5FDA300DE8632 /* ScutiButtonSwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E4CF82AC5FDA300DE8632 /* ScutiButtonSwiftUI.swift */; };
+		049E4CFA2AC5FE5800DE8632 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E4CF62AC5FC7800DE8632 /* CustomView.swift */; };
+		049E4CFC2AC6019E00DE8632 /* ScutiWebViewSwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E4CFB2AC6019E00DE8632 /* ScutiWebViewSwiftUI.swift */; };
 		04D1CFFD2AB0D4DA00A5796C /* ScutiSDKSwift.docc in Sources */ = {isa = PBXBuildFile; fileRef = 04D1CFFC2AB0D4DA00A5796C /* ScutiSDKSwift.docc */; };
 		04D1D0032AB0D4DA00A5796C /* ScutiSDKSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D1CFF82AB0D4DA00A5796C /* ScutiSDKSwift.framework */; };
 		04D1D0082AB0D4DA00A5796C /* ScutiSDKSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D1D0072AB0D4DA00A5796C /* ScutiSDKSwiftTests.swift */; };
@@ -38,7 +42,7 @@
 		04D1D06A2AB0D52700A5796C /* ScutiSwiftUIUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D1D0692AB0D52700A5796C /* ScutiSwiftUIUITestsLaunchTests.swift */; };
 		04D1D0792AB0D5FF00A5796C /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 04D1D0752AB0D5FF00A5796C /* .gitkeep */; };
 		04D1D07B2AB0D5FF00A5796C /* ScutiUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D1D0772AB0D5FF00A5796C /* ScutiUtils.swift */; };
-		04D715B32AB3444B00E480BA /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D715B22AB3444B00E480BA /* Enum.swift */; };
+		04D715B32AB3444B00E480BA /* Enum+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D715B22AB3444B00E480BA /* Enum+Extension.swift */; };
 		04D715B52AB34AB900E480BA /* ScutiSDKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D715B42AB34AB900E480BA /* ScutiSDKManager.swift */; };
 		04EF81612ABCAAEE00F36A5E /* StoryboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EF81602ABCAAEE00F36A5E /* StoryboardViewController.swift */; };
 		04EF81632ABCAFED00F36A5E /* ManualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EF81622ABCAFED00F36A5E /* ManualViewController.swift */; };
@@ -53,6 +57,9 @@
 		04EF81852ABCC13C00F36A5E /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EF81842ABCC13C00F36A5E /* test.swift */; };
 		04EF81862ABCC28700F36A5E /* ScutiSDKSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D1CFF82AB0D4DA00A5796C /* ScutiSDKSwift.framework */; };
 		04EF81872ABCC28700F36A5E /* ScutiSDKSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04D1CFF82AB0D4DA00A5796C /* ScutiSDKSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04F9FEF62AC332CF0006797E /* StoryboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9FEF52AC332CF0006797E /* StoryboardViewController.m */; };
+		04F9FEF92AC332E10006797E /* ManualViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9FEF82AC332E10006797E /* ManualViewController.m */; };
+		04F9FEFC2AC332F30006797E /* CustomScutiButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F9FEFB2AC332F30006797E /* CustomScutiButtonViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -157,6 +164,10 @@
 		04343C0A2ABE06ED004A6BE0 /* ScutiSDKSwift.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; path = ScutiSDKSwift.podspec; sourceTree = SOURCE_ROOT; };
 		045D06CF2AB372C200A6E890 /* ScutiButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScutiButton.swift; sourceTree = "<group>"; };
 		045D06D12AB3836700A6E890 /* ScutiWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScutiWebView.swift; sourceTree = "<group>"; };
+		049E4CF32AC5FAF400DE8632 /* NormalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalView.swift; sourceTree = "<group>"; };
+		049E4CF62AC5FC7800DE8632 /* CustomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
+		049E4CF82AC5FDA300DE8632 /* ScutiButtonSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScutiButtonSwiftUI.swift; sourceTree = "<group>"; };
+		049E4CFB2AC6019E00DE8632 /* ScutiWebViewSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScutiWebViewSwiftUI.swift; sourceTree = "<group>"; };
 		04D1CFF82AB0D4DA00A5796C /* ScutiSDKSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScutiSDKSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D1CFFB2AB0D4DA00A5796C /* ScutiSDKSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScutiSDKSwift.h; sourceTree = "<group>"; };
 		04D1CFFC2AB0D4DA00A5796C /* ScutiSDKSwift.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = ScutiSDKSwift.docc; sourceTree = "<group>"; };
@@ -187,7 +198,7 @@
 		04D1D0692AB0D52700A5796C /* ScutiSwiftUIUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScutiSwiftUIUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		04D1D0752AB0D5FF00A5796C /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		04D1D0772AB0D5FF00A5796C /* ScutiUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScutiUtils.swift; sourceTree = "<group>"; };
-		04D715B22AB3444B00E480BA /* Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enum.swift; sourceTree = "<group>"; };
+		04D715B22AB3444B00E480BA /* Enum+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Enum+Extension.swift"; sourceTree = "<group>"; };
 		04D715B42AB34AB900E480BA /* ScutiSDKManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScutiSDKManager.swift; sourceTree = "<group>"; };
 		04EF81602ABCAAEE00F36A5E /* StoryboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardViewController.swift; sourceTree = "<group>"; };
 		04EF81622ABCAFED00F36A5E /* ManualViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualViewController.swift; sourceTree = "<group>"; };
@@ -206,6 +217,12 @@
 		04EF817E2ABCBE1D00F36A5E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		04EF81832ABCC13C00F36A5E /* ExampleScutiObjC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ExampleScutiObjC-Bridging-Header.h"; sourceTree = "<group>"; };
 		04EF81842ABCC13C00F36A5E /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test.swift; sourceTree = "<group>"; };
+		04F9FEF42AC332CF0006797E /* StoryboardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StoryboardViewController.h; sourceTree = "<group>"; };
+		04F9FEF52AC332CF0006797E /* StoryboardViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StoryboardViewController.m; sourceTree = "<group>"; };
+		04F9FEF72AC332E10006797E /* ManualViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManualViewController.h; sourceTree = "<group>"; };
+		04F9FEF82AC332E10006797E /* ManualViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ManualViewController.m; sourceTree = "<group>"; };
+		04F9FEFA2AC332F30006797E /* CustomScutiButtonViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomScutiButtonViewController.h; sourceTree = "<group>"; };
+		04F9FEFB2AC332F30006797E /* CustomScutiButtonViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomScutiButtonViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -296,6 +313,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		049E4CF22AC5FAE200DE8632 /* Pages */ = {
+			isa = PBXGroup;
+			children = (
+				049E4CF32AC5FAF400DE8632 /* NormalView.swift */,
+				049E4CF62AC5FC7800DE8632 /* CustomView.swift */,
+			);
+			path = Pages;
+			sourceTree = "<group>";
+		};
 		04D1CFEE2AB0D4DA00A5796C = {
 			isa = PBXGroup;
 			children = (
@@ -384,6 +410,7 @@
 		04D1D04B2AB0D52600A5796C /* ScutiSwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				049E4CF22AC5FAE200DE8632 /* Pages */,
 				04D1D04C2AB0D52600A5796C /* ScutiSwiftUIApp.swift */,
 				04D1D04E2AB0D52600A5796C /* ContentView.swift */,
 				04D1D0502AB0D52700A5796C /* Assets.xcassets */,
@@ -424,8 +451,10 @@
 				04D1D0772AB0D5FF00A5796C /* ScutiUtils.swift */,
 				045D06CF2AB372C200A6E890 /* ScutiButton.swift */,
 				045D06D12AB3836700A6E890 /* ScutiWebView.swift */,
-				04D715B22AB3444B00E480BA /* Enum.swift */,
+				04D715B22AB3444B00E480BA /* Enum+Extension.swift */,
 				04D715B42AB34AB900E480BA /* ScutiSDKManager.swift */,
+				049E4CF82AC5FDA300DE8632 /* ScutiButtonSwiftUI.swift */,
+				049E4CFB2AC6019E00DE8632 /* ScutiWebViewSwiftUI.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -443,6 +472,7 @@
 		04EF816B2ABCBE1B00F36A5E /* ExampleScutiObjC */ = {
 			isa = PBXGroup;
 			children = (
+				04F9FEF32AC332B50006797E /* Pages */,
 				04EF816C2ABCBE1B00F36A5E /* AppDelegate.h */,
 				04EF816D2ABCBE1B00F36A5E /* AppDelegate.m */,
 				04EF816F2ABCBE1B00F36A5E /* SceneDelegate.h */,
@@ -458,6 +488,19 @@
 				04EF81832ABCC13C00F36A5E /* ExampleScutiObjC-Bridging-Header.h */,
 			);
 			path = ExampleScutiObjC;
+			sourceTree = "<group>";
+		};
+		04F9FEF32AC332B50006797E /* Pages */ = {
+			isa = PBXGroup;
+			children = (
+				04F9FEF42AC332CF0006797E /* StoryboardViewController.h */,
+				04F9FEF52AC332CF0006797E /* StoryboardViewController.m */,
+				04F9FEF72AC332E10006797E /* ManualViewController.h */,
+				04F9FEF82AC332E10006797E /* ManualViewController.m */,
+				04F9FEFA2AC332F30006797E /* CustomScutiButtonViewController.h */,
+				04F9FEFB2AC332F30006797E /* CustomScutiButtonViewController.m */,
+			);
+			path = Pages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -651,6 +694,7 @@
 				TargetAttributes = {
 					04D1CFF72AB0D4DA00A5796C = {
 						CreatedOnToolsVersion = 14.3.1;
+						LastSwiftMigration = 1430;
 					};
 					04D1D0012AB0D4DA00A5796C = {
 						CreatedOnToolsVersion = 14.3.1;
@@ -792,10 +836,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				049E4CFC2AC6019E00DE8632 /* ScutiWebViewSwiftUI.swift in Sources */,
 				04D1D07B2AB0D5FF00A5796C /* ScutiUtils.swift in Sources */,
 				045D06D02AB372C200A6E890 /* ScutiButton.swift in Sources */,
+				049E4CF92AC5FDA300DE8632 /* ScutiButtonSwiftUI.swift in Sources */,
 				045D06D22AB3836700A6E890 /* ScutiWebView.swift in Sources */,
-				04D715B32AB3444B00E480BA /* Enum.swift in Sources */,
+				04D715B32AB3444B00E480BA /* Enum+Extension.swift in Sources */,
 				04D1CFFD2AB0D4DA00A5796C /* ScutiSDKSwift.docc in Sources */,
 				04D715B52AB34AB900E480BA /* ScutiSDKManager.swift in Sources */,
 			);
@@ -843,6 +889,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				049E4CF52AC5FB4300DE8632 /* NormalView.swift in Sources */,
+				049E4CFA2AC5FE5800DE8632 /* CustomView.swift in Sources */,
 				04D1D04F2AB0D52600A5796C /* ContentView.swift in Sources */,
 				04D1D04D2AB0D52600A5796C /* ScutiSwiftUIApp.swift in Sources */,
 			);
@@ -871,8 +919,11 @@
 			files = (
 				04EF81742ABCBE1B00F36A5E /* ViewController.m in Sources */,
 				04EF816E2ABCBE1B00F36A5E /* AppDelegate.m in Sources */,
+				04F9FEF92AC332E10006797E /* ManualViewController.m in Sources */,
 				04EF817F2ABCBE1D00F36A5E /* main.m in Sources */,
+				04F9FEF62AC332CF0006797E /* StoryboardViewController.m in Sources */,
 				04EF81852ABCC13C00F36A5E /* test.swift in Sources */,
+				04F9FEFC2AC332F30006797E /* CustomScutiButtonViewController.m in Sources */,
 				04EF81712ABCBE1B00F36A5E /* SceneDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1009,7 +1060,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1066,7 +1117,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1081,6 +1132,7 @@
 		04D1D00D2AB0D4DA00A5796C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -1105,6 +1157,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1113,6 +1166,7 @@
 		04D1D00E2AB0D4DA00A5796C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -1180,10 +1234,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = U8NVH4ZB4P;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Scuti/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Scuti Swift";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -1210,10 +1265,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = U8NVH4ZB4P;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Scuti/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Scuti Swift";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -1317,11 +1373,13 @@
 				DEVELOPMENT_TEAM = U8NVH4ZB4P;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Scuti Swift UI";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1329,9 +1387,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.scuti.ScutiSwiftUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1346,11 +1407,13 @@
 				DEVELOPMENT_TEAM = U8NVH4ZB4P;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Scuti Swift UI";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1358,9 +1421,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.scuti.ScutiSwiftUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -1447,6 +1513,7 @@
 				DEVELOPMENT_TEAM = U8NVH4ZB4P;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExampleScutiObjC/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Scuti Obj C";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -1459,11 +1526,14 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.scuti.ExampleScutiObjC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "ExampleScutiObjC/ExampleScutiObjC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1478,6 +1548,7 @@
 				DEVELOPMENT_TEAM = U8NVH4ZB4P;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExampleScutiObjC/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Scuti Obj C";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -1490,10 +1561,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.scuti.ExampleScutiObjC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "ExampleScutiObjC/ExampleScutiObjC-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

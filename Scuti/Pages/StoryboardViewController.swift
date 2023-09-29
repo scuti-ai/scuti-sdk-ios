@@ -38,11 +38,11 @@ class StoryboardViewController: UIViewController {
         lblCntRewards.text = "New Rewards : \(ScutiSDKManager.shared.scutiEvents.cntRewards)"
     }
 
-    @IBSegueAction func embedScutiButton(_ coder: NSCoder) -> UIViewController? {
-        let controller = UIHostingController(coder: coder, rootView: ScutiButton())
-        controller?.view.backgroundColor = .clear
-        return controller
-    }
+//    @IBSegueAction func embedScutiButton(_ coder: NSCoder) -> UIViewController? {
+////        let controller = UIHostingController(coder: coder, rootView: ScutiButton())
+////        controller?.view.backgroundColor = .clear
+////        return controller
+//    }
 
     /*
     // MARK: - Navigation
@@ -73,5 +73,20 @@ extension StoryboardViewController: ScutiSDKManagerDelegate {
     func onUserToken(userToken: String) {
         lblUserAuthenticated.text = "User authenticated : YES"
         lblUserAuthenticated.textColor = .green
+    }
+    func onScutiButtonClicked() {
+        
+    }
+    
+    func onBackToGame() {
+        
+    }
+    
+    func onScutiExchange(exchange: ScutiSDKSwift.ScutiExchangeClass) {
+        
+    }
+    
+    func onErrorOccurred(error: Error) {
+        
     }
 }

@@ -18,7 +18,7 @@ public enum ScutiStoreMessage: String {
     case LOG_OUT
 }
 
-public enum TargetEnvironment {
+@objc public enum TargetEnvironment: Int {
     case development
     case staging
     case production
@@ -99,3 +99,16 @@ extension Bundle {
     }
 }
 private class BundleToken {}
+
+extension UIView {
+    var parentViewController: UIViewController? {
+        var parentResponder: UIResponder? = self.next
+        while parentResponder != nil {
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
+            }
+            parentResponder = parentResponder?.next
+        }
+        return nil
+    }
+}

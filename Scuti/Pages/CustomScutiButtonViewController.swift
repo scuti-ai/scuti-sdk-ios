@@ -84,4 +84,19 @@ extension CustomScutiButtonViewController: ScutiSDKManagerDelegate {
         lblUserAuthenticated.text = "User authenticated : YES"
         lblUserAuthenticated.textColor = .green
     }
+    func onScutiButtonClicked() {
+        
+    }
+    
+    func onBackToGame() {
+        
+    }
+    
+    func onScutiExchange(exchange: ScutiSDKSwift.ScutiExchangeClass) {
+        
+    }
+    
+    func onErrorOccurred(error: Error) {
+        
+    }
 }

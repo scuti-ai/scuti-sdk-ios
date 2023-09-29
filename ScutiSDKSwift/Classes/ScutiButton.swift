@@ -5,85 +5,108 @@
 //  Created by mac on 14/09/2023.
 //
 
-import SwiftUI
+import UIKit
 import Combine
+//import SwiftUI
 
-public struct ScutiButton: View {
-//    let appBundle = Bundle(identifier:"com.scuti.ScutiSDKSwift")
+@objc public class ScutiButton: UIView {
     let buttonRadius = 10.0
+
+    let imgNewProducts = UIImageView(image: ScutiIcons.newItem.image)
+    let imgNewRewards = UIImageView(image: ScutiIcons.newReward.image)
+    let lblCntNewRewards = UILabel(frame: .zero)
+
+    private var cancellable: AnyCancellable?
+
+    public init(vc: UIViewController) {
+        super.init(frame: .zero)
+        initializeView()
+    }
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        initializeView()
+    }
     
-    @State private var showModal = false
-    @State private var showNewItems = false
-    @State private var showNewRewards = false
-
-    private var debouncedPublisherNewItems: AnyPublisher<Int, Never>
-    private var debouncedPublisherNewRewards: AnyPublisher<Int, Never>
-    private var debouncedPublisherBackToGame: AnyPublisher<Bool, Never>
-
-    public init() {
-        debouncedPublisherNewItems = ScutiSDKManager.shared.scutiEvents.$cntNewProducts
-            .debounce(for: 0.1, scheduler: RunLoop.main)
-            .eraseToAnyPublisher()
-        debouncedPublisherNewRewards = ScutiSDKManager.shared.scutiEvents.$cntRewards
-            .debounce(for: 0.1, scheduler: RunLoop.main)
-            .eraseToAnyPublisher()
-        debouncedPublisherBackToGame = ScutiSDKManager.shared.scutiEvents.$backToGame
-            .debounce(for: 0.1, scheduler: RunLoop.main)
-            .eraseToAnyPublisher()
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        initializeView()
     }
-    public var body: some View {
-        ZStack(alignment: .topLeading) {
-            RoundedRectangle(cornerRadius: buttonRadius).foregroundColor(Color(UIColor(red: 0.0546875, green: 0.046875, blue: 0.0625, alpha: 1)))
-                .overlay {
-                    RoundedRectangle(cornerRadius: buttonRadius)
-                        .stroke(style: StrokeStyle(lineWidth: 4)).foregroundColor(Color(UIColor(red: 0.1171875, green: 0.20703125, blue: 0.93359375, alpha: 1)))
-                }
-                .overlay {
-                    Image(uiImage: ScutiIcons.logo.image)
-                }
-                .padding(.leading, 80)
-                .padding(.trailing, 10)
-                .padding(.top, 10)
-                .onTapGesture {
-                    showModal.toggle()
-                    ScutiSDKManager.shared.toggleStore(showModal)
-                }
-                .fullScreenCover(isPresented: $showModal, onDismiss: {
-                    ScutiSDKManager.shared.toggleStore(false)
-                }) {
-                    ScutiWebView(scutiWebview: ScutiSDKManager.shared.scutiWebview)
-                }
-                .onReceive(debouncedPublisherBackToGame) { value in
-                    showModal = false
-                }
-           HStack {
-                Image(uiImage: ScutiIcons.newItem.image)
-                    .resizable()
-                    .frame(width: 94, height: 28)
-                    .opacity(showNewItems ? 1 : 0)
-                    .onReceive(debouncedPublisherNewItems) { value in
-                        showNewItems = value > 0
-                    }
-                Spacer()
-                ZStack {
-                    Image(uiImage: ScutiIcons.newReward.image)
-                        .resizable()
-                    .frame(width: 30, height: 30)
-                    Text("\(ScutiSDKManager.shared.scutiEvents.cntRewards)")
-                        .foregroundColor(.white)
-                }
-                .opacity(showNewRewards ? 1 : 0)
-                .onReceive(debouncedPublisherNewRewards) { value in
-                    showNewRewards = value > 0
-                }
-            }
-        }
+    
+    private func initializeView() {
+        backgroundColor = .clear
         
+        let btn = UIButton(frame: .zero)
+        btn.layer.cornerRadius = buttonRadius
+        btn.backgroundColor = UIColor(red: 0.0546875, green: 0.046875, blue: 0.0625, alpha: 1)
+        btn.layer.borderColor = UIColor(red: 0.1171875, green: 0.20703125, blue: 0.93359375, alpha: 1).cgColor
+        btn.layer.borderWidth = 4
+        btn.setImage(ScutiIcons.logo.image, for: .normal)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
+
+        addSubview(btn)
+        
+        NSLayoutConstraint.activate([
+            btn.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 80),
+            btn.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            btn.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            btn.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
+        ])
+        
+        imgNewProducts.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(imgNewProducts)
+        NSLayoutConstraint.activate([
+            imgNewProducts.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
+            imgNewProducts.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+            imgNewProducts.widthAnchor.constraint(equalToConstant: 94),
+            imgNewProducts.heightAnchor.constraint(equalToConstant: 28),
+        ])
+        
+        imgNewRewards.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(imgNewRewards)
+        NSLayoutConstraint.activate([
+            imgNewRewards.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+            imgNewRewards.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+            imgNewRewards.widthAnchor.constraint(equalToConstant: 30),
+            imgNewRewards.heightAnchor.constraint(equalToConstant: 30),
+        ])
+        
+        lblCntNewRewards.textColor = .white
+        lblCntNewRewards.font = UIFont.systemFont(ofSize: 14)
+        lblCntNewRewards.translatesAutoresizingMaskIntoConstraints = false
+        imgNewRewards.addSubview(lblCntNewRewards)
+        NSLayoutConstraint.activate([
+            lblCntNewRewards.centerXAnchor.constraint(equalTo: imgNewRewards.centerXAnchor),
+            lblCntNewRewards.centerYAnchor.constraint(equalTo: imgNewRewards.centerYAnchor),
+        ])
+        checkStatus()
+        
+        cancellable = ScutiSDKManager.shared.scutiEvents.objectWillChange.sink(receiveValue: { value in
+            self.perform(#selector(self.checkStatus), with: nil, afterDelay: 0.1)
+
+        })
+    }
+    @objc func checkStatus() {
+        lblCntNewRewards.text = "\(ScutiSDKManager.shared.scutiEvents.cntRewards)"
+        imgNewProducts.isHidden = ScutiSDKManager.shared.scutiEvents.cntNewProducts == 0
+        imgNewRewards.isHidden = ScutiSDKManager.shared.scutiEvents.cntRewards == 0
+    }
+    @objc func buttonClicked() {
+        if let vc = parentViewController {
+            ScutiSDKManager.shared.showScutiWebView(viewController: vc)
+        }
     }
 }
 
-struct ScutiButton_Previews: PreviewProvider {
-    static var previews: some View {
-        ScutiButton()
-    }
-}
+//public struct ScutiButtonSwiftUI: UIViewRepresentable {
+//    public typealias UIViewType = UIView
+//
+//    public func makeUIView(context: Context) -> UIView {
+//        return ScutiButton()
+//    }
+//
+//    public func updateUIView(_ view: UIView, context: Context) {
+//    }
+//
+//}
+
