@@ -2,7 +2,7 @@
 //  ScutiWebView.swift
 //  ScutiSDKSwift
 //
-//  Created by mac on 14/09/2023.
+//  Created by Adrian R on 14/09/2023.
 //
 
 //import SwiftUI

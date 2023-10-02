@@ -2,7 +2,7 @@
 //  Enum.swift
 //  ScutiSDKSwift
 //
-//  Created by mac on 14/09/2023.
+//  Created by Adrian R on 14/09/2023.
 //
 
 import Foundation
@@ -63,25 +63,14 @@ public enum ScutiIcons: String {
 }
 
 extension Bundle {
-    // This is copied method from SPM generated Bundle.module for CocoaPods support
     static func scutiFrameworkBundle() -> Bundle {
-
         let candidates = [
-            // Bundle should be present here when the package is linked into an App.
             Bundle.main.resourceURL,
-
-            // Bundle should be present here when the package is linked into a framework.
             Bundle(for: BundleToken.self).resourceURL,
-
-            // For command-line tools.
             Bundle.main.bundleURL,
         ]
-
         let bundleNames = [
-            // For Swift Package Manager
             "ScutiSDKSwift_ScutiSDKSwift",
-
-            // For Carthage
             "ScutiSDKSwift",
         ]
 
@@ -94,7 +83,6 @@ extension Bundle {
             }
         }
 
-        // Return whatever bundle this code is in as a last resort.
         return Bundle(for: BundleToken.self)
     }
 }

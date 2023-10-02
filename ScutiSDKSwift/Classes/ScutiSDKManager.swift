@@ -2,7 +2,7 @@
 //  ScutiSDKManager.swift
 //  ScutiSDKSwift
 //
-//  Created by mac on 14/09/2023.
+//  Created by Adrian R on 14/09/2023.
 //
 
 import Foundation
@@ -26,10 +26,6 @@ import SwiftUI
     override init() {
         scutiWebview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
         scutiWebview.translatesAutoresizingMaskIntoConstraints = false
-//#if DEBUG
-//        self.scutiWebview.isInspectable = true
-//#endif
-
     }
     @objc public func initializeSDK(environment: TargetEnvironment, appId: String) throws {
         if !self.appId.isEmpty {
@@ -50,7 +46,6 @@ import SwiftUI
         }
     }
     func loadWebViewData() async {
-//        try? await Task.sleep(nanoseconds: UInt64(0.5 * Double(NSEC_PER_SEC)))
         scutiWebview.navigationDelegate = self
         let url = targetEnvironment.url(id: appId, scutiToken: scutiEvents.userToken)
         let request = URLRequest(url: url)
@@ -62,57 +57,17 @@ import SwiftUI
         }
         toggleStore(true)
         showingScutiWebViewController = ScutiWebView()
-//        showingScutiWebViewController = UIHostingController(rootView: ScutiWebView(scutiWebview: scutiWebview))
         showingScutiWebViewController?.modalPresentationStyle = .fullScreen
         viewController.present(showingScutiWebViewController!, animated: true)
     }
-    public func showScutiWebView() {
-//        if showingScutiWebViewController != nil {
-//            return
-//        }
-//        toggleStore(true)
-//        showingScutiWebViewController = ScutiWebView()
-////        showingScutiWebViewController = UIHostingController(rootView: ScutiWebView(scutiWebview: scutiWebview))
-//        showingScutiWebViewController?.modalPresentationStyle = .fullScreen
-//        viewController.present(showingScutiWebViewController!, animated: true)
-    }
 }
-//class Actions {
-//    @ObservedObject var Sheet: SheetObservable
-//
-//    init(sheet: SheetObservable) {
-//        self.Sheet = sheet
-//    }
-//
-//    public func openSheet() {
-//        print("openSheet fired()")
-//        self.Sheet.isActive = true
-//    }
-//}
 extension ScutiSDKManager : WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        print("======== webView didFinish : \(webView.url?.absoluteString ?? "")")
         let js = "window.Unity = { call: function(msg) { window.location = 'unity:' + msg; }  };";
-//        let js = """
-//if (window && window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.unityControl) {
-//     window.Unity = {
-//         call: function(msg) {
-//             window.webkit.messageHandlers.unityControl.postMessage(msg);
-//         }
-//     }
-// } else {
-//     window.Unity = {
-//         call: function(msg) {
-//             window.location = 'unity:' + msg;
-//         }
-//     }
-// }
-//""";
         webView.evaluateJavaScript(js)
 
     }
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        print("======== decidePolicyFor : \(navigationAction.request.url?.absoluteString ?? "")")
         if let fullPath = navigationAction.request.url?.absoluteString
         {
             if(fullPath.starts(with: "unity:"))
@@ -127,7 +82,6 @@ extension ScutiSDKManager : WKNavigationDelegate {
     private func messageFromJS(webView:WKWebView, message:String)
     {
         let encoded = message.removingPercentEncoding!;
-        print("===== decidePolicyFor full: \(encoded)");
         let data = encoded.data(using: .utf8)!
         
         let jsonData = try? JSONSerialization.jsonObject(with: data, options: [])
@@ -138,7 +92,6 @@ extension ScutiSDKManager : WKNavigationDelegate {
         guard let msg = dictionary["message"] as? String else {
             return
         }
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ message: \(msg) : \(dictionary["payload"] ?? "")");
         switch(msg)
         {
         case ScutiStoreMessage.USER_TOKEN.rawValue:
@@ -170,24 +123,23 @@ extension ScutiSDKManager : WKNavigationDelegate {
                     scutiEventsObjC.exchange = exchange.convertToClass()
                     delegate?.onScutiExchange(exchange: exchange.convertToClass())
                 } catch {
-                    print("+++++++++ SCUTI_EXCHANGE error: \(error)");
                 }
             }
-            break;
+            break
         case ScutiStoreMessage.NEW_PRODUCTS.rawValue:
             if let payload = dictionary["payload"] as? Int {
                 scutiEvents.cntNewProducts = payload
                 scutiEventsObjC.cntNewProducts = payload
                 delegate?.onNewProducts(cntProducts: payload)
             }
-            break;
+            break
         case ScutiStoreMessage.NEW_REWARDS.rawValue:
             if let payload = dictionary["payload"] as? Int {
                 scutiEvents.cntRewards = payload
                 scutiEventsObjC.cntRewards = payload
                 delegate?.onNewRewards(cntRewards: payload)
             }
-            break;
+            break
         case ScutiStoreMessage.BACK_TO_THE_GAME.rawValue:
             scutiEvents.backToGame = true
             scutiEventsObjC.backToGame = true
@@ -196,7 +148,7 @@ extension ScutiSDKManager : WKNavigationDelegate {
                 self.toggleStore(false)
                 self.showingScutiWebViewController = nil
             })
-            break;
+            break
         case ScutiStoreMessage.STORE_IS_READY.rawValue:
             startSession()
             getNewProductsCommand();
@@ -204,9 +156,9 @@ extension ScutiSDKManager : WKNavigationDelegate {
             scutiEvents.isStoreReady = true
             scutiEventsObjC.isStoreReady = true
             delegate?.onStoreReady()
-            break;
+            break
         default:
-            print("Message from JS:" , msg);
+            break
         }
     }
 

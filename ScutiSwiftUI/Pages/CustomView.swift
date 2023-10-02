@@ -2,7 +2,7 @@
 //  CustomView.swift
 //  ScutiSDKSwift
 //
-//  Created by mac on 28/09/2023.
+//  Created by Adrian R on 28/09/2023.
 //
 
 import SwiftUI
