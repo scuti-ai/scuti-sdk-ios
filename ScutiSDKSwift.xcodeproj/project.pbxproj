@@ -20,6 +20,7 @@
 		049E4CF92AC5FDA300DE8632 /* ScutiButtonSwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E4CF82AC5FDA300DE8632 /* ScutiButtonSwiftUI.swift */; };
 		049E4CFA2AC5FE5800DE8632 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E4CF62AC5FC7800DE8632 /* CustomView.swift */; };
 		049E4CFC2AC6019E00DE8632 /* ScutiWebViewSwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E4CFB2AC6019E00DE8632 /* ScutiWebViewSwiftUI.swift */; };
+		04A273792ACB0C16001776B1 /* ScutiSDKSwift.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 04343C0A2ABE06ED004A6BE0 /* ScutiSDKSwift.podspec */; };
 		04D1CFFD2AB0D4DA00A5796C /* ScutiSDKSwift.docc in Sources */ = {isa = PBXBuildFile; fileRef = 04D1CFFC2AB0D4DA00A5796C /* ScutiSDKSwift.docc */; };
 		04D1D0032AB0D4DA00A5796C /* ScutiSDKSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D1CFF82AB0D4DA00A5796C /* ScutiSDKSwift.framework */; };
 		04D1D0082AB0D4DA00A5796C /* ScutiSDKSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D1D0072AB0D4DA00A5796C /* ScutiSDKSwiftTests.swift */; };
@@ -168,6 +169,8 @@
 		049E4CF62AC5FC7800DE8632 /* CustomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
 		049E4CF82AC5FDA300DE8632 /* ScutiButtonSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScutiButtonSwiftUI.swift; sourceTree = "<group>"; };
 		049E4CFB2AC6019E00DE8632 /* ScutiWebViewSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScutiWebViewSwiftUI.swift; sourceTree = "<group>"; };
+		04A273772ACB04D8001776B1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		04A273782ACB04E6001776B1 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		04D1CFF82AB0D4DA00A5796C /* ScutiSDKSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScutiSDKSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D1CFFB2AB0D4DA00A5796C /* ScutiSDKSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScutiSDKSwift.h; sourceTree = "<group>"; };
 		04D1CFFC2AB0D4DA00A5796C /* ScutiSDKSwift.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = ScutiSDKSwift.docc; sourceTree = "<group>"; };
@@ -325,7 +328,9 @@
 		04D1CFEE2AB0D4DA00A5796C = {
 			isa = PBXGroup;
 			children = (
+				04A273772ACB04D8001776B1 /* README.md */,
 				04343C0A2ABE06ED004A6BE0 /* ScutiSDKSwift.podspec */,
+				04A273782ACB04E6001776B1 /* Package.swift */,
 				04D1CFFA2AB0D4DA00A5796C /* ScutiSDKSwift */,
 				04D1D0062AB0D4DA00A5796C /* ScutiSDKSwiftTests */,
 				04D1D0172AB0D4FC00A5796C /* Scuti */,
@@ -760,6 +765,7 @@
 			files = (
 				04343C092ABE02E7004A6BE0 /* scuti_logo_white@2x.png in Resources */,
 				04343C082ABE02E7004A6BE0 /* navstepperinactive@2x.png in Resources */,
+				04A273792ACB0C16001776B1 /* ScutiSDKSwift.podspec in Resources */,
 				04343C072ABE02E7004A6BE0 /* new_items_flag@2x.png in Resources */,
 				04D1D0792AB0D5FF00A5796C /* .gitkeep in Resources */,
 			);
@@ -1060,7 +1066,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1117,7 +1123,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

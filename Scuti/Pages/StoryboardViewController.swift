@@ -2,7 +2,7 @@
 //  StoryboardViewController.swift
 //  ScutiSDKSwift
 //
-//  Created by mac on 21/09/2023.
+//  Created by Adrian R on 21/09/2023.
 //
 
 import UIKit
@@ -37,12 +37,6 @@ class StoryboardViewController: UIViewController {
         lblCntProducts.text = "New Products : \(ScutiSDKManager.shared.scutiEvents.cntNewProducts)"
         lblCntRewards.text = "New Rewards : \(ScutiSDKManager.shared.scutiEvents.cntRewards)"
     }
-
-//    @IBSegueAction func embedScutiButton(_ coder: NSCoder) -> UIViewController? {
-////        let controller = UIHostingController(coder: coder, rootView: ScutiButton())
-////        controller?.view.backgroundColor = .clear
-////        return controller
-//    }
 
     /*
     // MARK: - Navigation

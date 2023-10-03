@@ -67,33 +67,3 @@ public struct ScutiExchangeModel: Decodable {
 
     func onErrorOccurred(error: Error)
 }
-//public extension ScutiSDKManagerDelegate {
-//    func onScutiButtonClicked() {
-//        
-//    }
-//    func onStoreReady() {
-//        
-//    }
-//    func onBackToGame() {
-//        
-//    }
-//    func onNewProducts(cntProducts: Int) {
-//        
-//    }
-//    func onNewRewards(cntRewards: Int) {
-//        
-//    }
-//    func onScutiExchange(exchange: ScutiExchangeClass) {
-//        
-//    }
-//    func onUserToken(userToken: String) {
-//        
-//    }
-//    func onLogout() {
-//        
-//    }
-//    func onErrorOccurred(error: Error) {
-//        
-//    }
-//
-//}

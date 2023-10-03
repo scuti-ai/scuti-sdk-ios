@@ -2,7 +2,7 @@
 //  ScutiSwiftUIUITests.swift
 //  ScutiSwiftUIUITests
 //
-//  Created by mac on 12/09/2023.
+//  Created by Adrian R on 12/09/2023.
 //
 
 import XCTest

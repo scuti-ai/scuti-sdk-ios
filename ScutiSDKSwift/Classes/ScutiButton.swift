@@ -2,12 +2,11 @@
 //  ScutiButton.swift
 //  ScutiSDKSwift
 //
-//  Created by mac on 14/09/2023.
+//  Created by Adrian R on 14/09/2023.
 //
 
 import UIKit
 import Combine
-//import SwiftUI
 
 @objc public class ScutiButton: UIView {
     let buttonRadius = 10.0
@@ -97,16 +96,3 @@ import Combine
         }
     }
 }
-
-//public struct ScutiButtonSwiftUI: UIViewRepresentable {
-//    public typealias UIViewType = UIView
-//
-//    public func makeUIView(context: Context) -> UIView {
-//        return ScutiButton()
-//    }
-//
-//    public func updateUIView(_ view: UIView, context: Context) {
-//    }
-//
-//}
-

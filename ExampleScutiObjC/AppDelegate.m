@@ -2,14 +2,12 @@
 //  AppDelegate.m
 //  ExampleScutiObjC
 //
-//  Created by mac on 21/09/2023.
+//  Created by Adrian R on 21/09/2023.
 //
 
 #import "AppDelegate.h"
 
-//#import <ScutiSDKSwift/ScutiSDKSwift.h>
 @import ScutiSDKSwift;
-//#import <ScutiSDKSwift/ScutiSDKSwift-Swift.h>
 
 @interface AppDelegate ()
 
