@@ -17,8 +17,6 @@ class ManualViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-
         let scutiButtonView = ScutiButton(frame: .zero)
         scutiButtonView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scutiButtonView)
