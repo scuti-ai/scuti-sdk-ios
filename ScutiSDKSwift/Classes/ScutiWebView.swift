@@ -10,6 +10,10 @@ import WebKit
 import UIKit
 
 @objc public class ScutiWebView: UIViewController {
+    public override var prefersStatusBarHidden: Bool {
+        return ScutiSDKManager.shared.standalone
+    }
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
