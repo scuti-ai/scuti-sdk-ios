@@ -8,7 +8,11 @@
 import Foundation
 import WebKit
 import SwiftUI
-
+class FullScreenWKWebView: WKWebView {
+    override var safeAreaInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+}
 @objc public class ScutiSDKManager: NSObject {
     @objc public static let shared = ScutiSDKManager()
 
@@ -22,13 +26,20 @@ import SwiftUI
     @objc public var scutiEventsObjC = ScutiModelObjC()
     
     var showingScutiWebViewController: UIViewController?
+    var standalone = false
     
+    private var urlToRedirectAfterReady: URL?
+
     override init() {
         scutiWebview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
-        scutiWebview.translatesAutoresizingMaskIntoConstraints = false
     }
-    @objc public func initializeSDK(environment: TargetEnvironment, appId: String) throws {
-        if !self.appId.isEmpty {
+    @objc public func initializeSDK(environment: TargetEnvironment, appId: String, forStandalone standalone: Bool = false) throws {
+        self.standalone = standalone
+        if standalone {
+            scutiWebview = FullScreenWKWebView(frame: .zero, configuration: WKWebViewConfiguration())
+        }
+        scutiWebview.translatesAutoresizingMaskIntoConstraints = false
+       if !self.appId.isEmpty {
             throw ScutiError.alreadyInitialized
         }
         if appId.isEmpty {
@@ -58,7 +69,23 @@ import SwiftUI
         toggleStore(true)
         showingScutiWebViewController = ScutiWebView()
         showingScutiWebViewController?.modalPresentationStyle = .fullScreen
-        viewController.present(showingScutiWebViewController!, animated: true)
+        viewController.present(showingScutiWebViewController!, animated: !standalone)
+    }
+    @objc public func redirectToUrl(url: URL) {
+        if standalone {
+            if scutiEvents.isStoreReady {
+                openUrl(url: url)
+            } else {
+                urlToRedirectAfterReady = url
+            }
+        }
+    }
+    
+    private func openUrl(url: URL) {
+        if standalone {
+            let request = URLRequest(url: url)
+            scutiWebview.load(request)
+        }
     }
 }
 extension ScutiSDKManager : WKNavigationDelegate {
@@ -104,6 +131,9 @@ extension ScutiSDKManager : WKNavigationDelegate {
                 delegate?.onUserToken(userToken: token)
                 getNewProductsCommand();
                 getNewRewardsCommand();
+                if standalone {
+                    hideBackToTheGame()
+                }
             }
             break;
         case ScutiStoreMessage.LOG_OUT.rawValue:
@@ -151,8 +181,11 @@ extension ScutiSDKManager : WKNavigationDelegate {
             break
         case ScutiStoreMessage.STORE_IS_READY.rawValue:
             startSession()
-            getNewProductsCommand();
-            getNewRewardsCommand();
+            getNewProductsCommand()
+            getNewRewardsCommand()
+            if standalone {
+                hideBackToTheGame()
+            }
             scutiEvents.isStoreReady = true
             scutiEventsObjC.isStoreReady = true
             delegate?.onStoreReady()
@@ -193,6 +226,14 @@ extension ScutiSDKManager {
     public func endSession()
     {
         scutiWebview.evaluateJavaScript("endSession();")
+    }
+
+    public func hideBackToTheGame()
+    {
+        scutiWebview.evaluateJavaScript("hideBackToTheGame();")
+        if let urlToRedirectAfterReady = urlToRedirectAfterReady {
+            openUrl(url: urlToRedirectAfterReady)
+        }
     }
 
 }
