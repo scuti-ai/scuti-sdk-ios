@@ -20,7 +20,7 @@ class FullScreenWKWebView: WKWebView {
     
     var targetEnvironment: TargetEnvironment = .development
     var appId: String = ""
-    var scutiWebview : WKWebView
+    public var scutiWebview : WKWebView
 
     @ObservedObject public var scutiEvents = ScutiModel()
     @objc public var scutiEventsObjC = ScutiModelObjC()
@@ -35,11 +35,31 @@ class FullScreenWKWebView: WKWebView {
     }
     @objc public func initializeSDK(environment: TargetEnvironment, appId: String, forStandalone standalone: Bool = false) throws {
         self.standalone = standalone
+        let configuration = WKWebViewConfiguration()
+//        configuration.defaultWebpagePreferences.allowsContentJavaScript = true
+        configuration.allowsInlineMediaPlayback = true
+        configuration.mediaTypesRequiringUserActionForPlayback = []
+        configuration.websiteDataStore = .default()
+        configuration.defaultWebpagePreferences.preferredContentMode = .recommended;
+        configuration.processPool = WKProcessPool()
+        configuration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
+        configuration.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
+
+//        configuration.allowsAirPlayForMediaPlayback = true
+//        configuration.allowsPictureInPictureMediaPlayback = true
+
         if standalone {
-            scutiWebview = FullScreenWKWebView(frame: .zero, configuration: WKWebViewConfiguration())
+            scutiWebview = FullScreenWKWebView(frame: .zero, configuration: configuration)
+        } else {
+            scutiWebview = WKWebView(frame: .zero, configuration: configuration)
         }
+        
+        
         scutiWebview.translatesAutoresizingMaskIntoConstraints = false
-       if !self.appId.isEmpty {
+        scutiWebview.allowsLinkPreview = true
+        scutiWebview.allowsBackForwardNavigationGestures = true
+
+        if !self.appId.isEmpty {
             throw ScutiError.alreadyInitialized
         }
         if appId.isEmpty {
@@ -88,20 +108,41 @@ class FullScreenWKWebView: WKWebView {
         }
     }
 }
-extension ScutiSDKManager : WKNavigationDelegate {
+extension ScutiSDKManager : WKNavigationDelegate, WKScriptMessageHandlerWithReply {
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
+        print("======== received event : \(message.body)")
+    }
+    
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+
         let js = "window.Unity = { call: function(msg) { window.location = 'unity:' + msg; }  };";
         webView.evaluateJavaScript(js)
 
     }
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if let fullPath = navigationAction.request.url?.absoluteString
-        {
-            if(fullPath.starts(with: "unity:"))
-            {
-                messageFromJS(webView:webView, message: fullPath.replacingOccurrences(of: "unity:", with: ""));
+        if let url = navigationAction.request.url {
+            let fullPath = url.absoluteString
+            print("======= decidePolicyFor fullPath : \(fullPath)")
+            if fullPath.contains("//itunes.apple.com/") {
+                UIApplication.shared.open(url)
                 decisionHandler(.cancel)
-                return;
+                return
+            } else if fullPath.starts(with: "unity:") {
+                messageFromJS(webView:webView, message: fullPath.replacingOccurrences(of: "unity:", with: ""))
+                decisionHandler(.cancel)
+                return
+            } else if !fullPath.starts(with: "about:blank") && !fullPath.starts(with: "file:") && !fullPath.starts(with: "http:") && !fullPath.starts(with: "https:") {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                }
+                decisionHandler(.cancel)
+                return
+            } else if navigationAction.navigationType == .linkActivated && (navigationAction.targetFrame != nil || !navigationAction.targetFrame!.isMainFrame) {
+                webView.load(navigationAction.request)
+                decisionHandler(.cancel)
+                return
+            } else if let targetFrame = navigationAction.targetFrame, targetFrame.isMainFrame {
+                
             }
         }
         decisionHandler(.allow)
