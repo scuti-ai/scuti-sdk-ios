@@ -11,7 +11,8 @@ public struct ScutiWebViewSwiftUI: UIViewControllerRepresentable {
     public typealias UIViewControllerType = ScutiWebView
     
     public init() {
-        
+        ScutiSDKManager.shared.scutiWebview.removeFromSuperview()
+        ScutiSDKManager.shared.scutiWebview.isHidden = false
     }
 
     public func makeUIViewController(context: Context) -> ScutiWebView {
@@ -19,12 +20,5 @@ public struct ScutiWebViewSwiftUI: UIViewControllerRepresentable {
     }
 
     public func updateUIViewController(_ uiViewController: ScutiWebView, context: Context) {
-    }
-}
-
-
-public struct ScutiWebViewSwiftUI_Previews: PreviewProvider {
-    public static var previews: some View {
-        ScutiWebViewSwiftUI()
     }
 }

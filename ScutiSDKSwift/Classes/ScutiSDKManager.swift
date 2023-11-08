@@ -8,7 +8,11 @@
 import Foundation
 import WebKit
 import SwiftUI
-
+class FullScreenWKWebView: WKWebView {
+    override var safeAreaInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+}
 @objc public class ScutiSDKManager: NSObject {
     @objc public static let shared = ScutiSDKManager()
 
@@ -16,18 +20,41 @@ import SwiftUI
     
     var targetEnvironment: TargetEnvironment = .development
     var appId: String = ""
-    var scutiWebview : WKWebView
+    public var scutiWebview : WKWebView
 
     @ObservedObject public var scutiEvents = ScutiModel()
     @objc public var scutiEventsObjC = ScutiModelObjC()
     
     var showingScutiWebViewController: UIViewController?
     
+    private var urlToRedirectAfterReady: URL?
+
     override init() {
-        scutiWebview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
+        let configuration = WKWebViewConfiguration()
+//        configuration.defaultWebpagePreferences.allowsContentJavaScript = true
+        configuration.allowsInlineMediaPlayback = true
+        configuration.mediaTypesRequiringUserActionForPlayback = []
+        configuration.websiteDataStore = .default()
+        configuration.defaultWebpagePreferences.preferredContentMode = .recommended;
+        configuration.processPool = WKProcessPool()
+        configuration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
+        configuration.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
+
+//        configuration.allowsAirPlayForMediaPlayback = true
+//        configuration.allowsPictureInPictureMediaPlayback = true
+
+        scutiWebview = FullScreenWKWebView(frame: UIScreen.main.bounds, configuration: configuration)
+
         scutiWebview.translatesAutoresizingMaskIntoConstraints = false
+        scutiWebview.allowsLinkPreview = true
+        scutiWebview.allowsBackForwardNavigationGestures = true
+
+        scutiWebview.isHidden = true
+  
+        scutiWebview.scrollView.contentInsetAdjustmentBehavior = .never
     }
     @objc public func initializeSDK(environment: TargetEnvironment, appId: String) throws {
+        scutiWebview.navigationDelegate = self
         if !self.appId.isEmpty {
             throw ScutiError.alreadyInitialized
         }
@@ -41,40 +68,77 @@ import SwiftUI
             scutiEvents.userToken = scutiToken
             scutiEventsObjC.userToken = scutiToken
         }
-        _ = Task {
-            await self.loadWebViewData()
-        }
+        loadWebViewData()
     }
-    func loadWebViewData() async {
-        scutiWebview.navigationDelegate = self
+    private func loadWebViewData() {
         let url = targetEnvironment.url(id: appId, scutiToken: scutiEvents.userToken)
         let request = URLRequest(url: url)
         scutiWebview.load(request)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.scutiWebview.frame = UIScreen.main.bounds
+            if  let window = UIApplication.shared.firstKeyWindow {
+                window.addSubview(self.scutiWebview)
+            }
+        }
     }
     @objc public func showScutiWebView(viewController: UIViewController) {
         if showingScutiWebViewController != nil {
             return
         }
         toggleStore(true)
+        scutiWebview.removeFromSuperview()
+        scutiWebview.isHidden = false
         showingScutiWebViewController = ScutiWebView()
         showingScutiWebViewController?.modalPresentationStyle = .fullScreen
-        viewController.present(showingScutiWebViewController!, animated: true)
+        viewController.present(showingScutiWebViewController!, animated: false)
+    }
+    @objc public func redirectToUrl(url: URL) {
+        if scutiEvents.isStoreReady {
+            openUrl(url: url)
+        } else {
+            urlToRedirectAfterReady = url
+        }
+    }
+    
+    private func openUrl(url: URL) {
+        let request = URLRequest(url: url)
+        scutiWebview.load(request)
     }
 }
-extension ScutiSDKManager : WKNavigationDelegate {
+extension ScutiSDKManager : WKNavigationDelegate, WKScriptMessageHandlerWithReply {
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
+    }
+    
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+
         let js = "window.Unity = { call: function(msg) { window.location = 'unity:' + msg; }  };";
         webView.evaluateJavaScript(js)
 
     }
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if let fullPath = navigationAction.request.url?.absoluteString
-        {
-            if(fullPath.starts(with: "unity:"))
-            {
-                messageFromJS(webView:webView, message: fullPath.replacingOccurrences(of: "unity:", with: ""));
+        if let url = navigationAction.request.url {
+            let fullPath = url.absoluteString
+            if fullPath.contains("//itunes.apple.com/") {
+                UIApplication.shared.open(url)
                 decisionHandler(.cancel)
-                return;
+                return
+            } else if fullPath.starts(with: "unity:") {
+                messageFromJS(webView:webView, message: fullPath.replacingOccurrences(of: "unity:", with: ""))
+                decisionHandler(.cancel)
+                return
+            } else if !fullPath.starts(with: "about:blank") && !fullPath.starts(with: "file:") && !fullPath.starts(with: "http:") && !fullPath.starts(with: "https:") {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                }
+                decisionHandler(.cancel)
+                return
+            } else if navigationAction.navigationType == .linkActivated && (navigationAction.targetFrame != nil || !navigationAction.targetFrame!.isMainFrame) {
+                webView.load(navigationAction.request)
+                decisionHandler(.cancel)
+                return
+            } else if let targetFrame = navigationAction.targetFrame, targetFrame.isMainFrame {
+                
             }
         }
         decisionHandler(.allow)
@@ -151,8 +215,8 @@ extension ScutiSDKManager : WKNavigationDelegate {
             break
         case ScutiStoreMessage.STORE_IS_READY.rawValue:
             startSession()
-            getNewProductsCommand();
-            getNewRewardsCommand();
+            getNewProductsCommand()
+            getNewRewardsCommand()
             scutiEvents.isStoreReady = true
             scutiEventsObjC.isStoreReady = true
             delegate?.onStoreReady()
@@ -193,6 +257,14 @@ extension ScutiSDKManager {
     public func endSession()
     {
         scutiWebview.evaluateJavaScript("endSession();")
+    }
+
+    public func hideBackToTheGame()
+    {
+        scutiWebview.evaluateJavaScript("hideBackToTheGame();")
+        if let urlToRedirectAfterReady = urlToRedirectAfterReady {
+            openUrl(url: urlToRedirectAfterReady)
+        }
     }
 
 }
