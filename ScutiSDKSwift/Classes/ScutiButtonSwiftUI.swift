@@ -21,8 +21,3 @@ public struct ScutiButtonSwiftUI: UIViewRepresentable {
     }
 
 }
-public struct ScutiButtonSwiftUI_Previews: PreviewProvider {
-    public static var previews: some View {
-        ScutiButtonSwiftUI()
-    }
-}

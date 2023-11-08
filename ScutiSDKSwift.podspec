@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ScutiSDKSwift'
-  s.version          = '1.0.1'
+  s.version          = '1.0.3'
   s.summary          = 'Scuti SDK - gCommerce Marketplace'
 
   s.swift_versions = '5.0'
