@@ -26,15 +26,13 @@ class FullScreenWKWebView: WKWebView {
     @objc public var scutiEventsObjC = ScutiModelObjC()
     
     var showingScutiWebViewController: UIViewController?
-    var standalone = false
     
     private var urlToRedirectAfterReady: URL?
 
     override init() {
-        scutiWebview = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
+        scutiWebview = FullScreenWKWebView(frame: .zero, configuration: WKWebViewConfiguration())
     }
-    @objc public func initializeSDK(environment: TargetEnvironment, appId: String, forStandalone standalone: Bool = false) throws {
-        self.standalone = standalone
+    @objc public func initializeSDK(environment: TargetEnvironment, appId: String) throws {
         let configuration = WKWebViewConfiguration()
 //        configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         configuration.allowsInlineMediaPlayback = true
@@ -48,11 +46,7 @@ class FullScreenWKWebView: WKWebView {
 //        configuration.allowsAirPlayForMediaPlayback = true
 //        configuration.allowsPictureInPictureMediaPlayback = true
 
-        if standalone {
-            scutiWebview = FullScreenWKWebView(frame: .zero, configuration: configuration)
-        } else {
-            scutiWebview = WKWebView(frame: .zero, configuration: configuration)
-        }
+        scutiWebview = FullScreenWKWebView(frame: .zero, configuration: configuration)
         
         
         scutiWebview.translatesAutoresizingMaskIntoConstraints = false
@@ -72,45 +66,48 @@ class FullScreenWKWebView: WKWebView {
             scutiEvents.userToken = scutiToken
             scutiEventsObjC.userToken = scutiToken
         }
-        _ = Task {
-            await self.loadWebViewData()
-        }
+        loadWebViewData()
     }
-    func loadWebViewData() async {
+    private func loadWebViewData() {
         scutiWebview.navigationDelegate = self
         let url = targetEnvironment.url(id: appId, scutiToken: scutiEvents.userToken)
         let request = URLRequest(url: url)
+        scutiWebview.isHidden = true
         scutiWebview.load(request)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.scutiWebview.frame = UIScreen.main.bounds
+            if  let window = UIApplication.shared.firstKeyWindow {
+                window.addSubview(self.scutiWebview)
+            }
+        }
     }
     @objc public func showScutiWebView(viewController: UIViewController) {
         if showingScutiWebViewController != nil {
             return
         }
         toggleStore(true)
+        scutiWebview.removeFromSuperview()
+        scutiWebview.isHidden = false
         showingScutiWebViewController = ScutiWebView()
         showingScutiWebViewController?.modalPresentationStyle = .fullScreen
-        viewController.present(showingScutiWebViewController!, animated: !standalone)
+        viewController.present(showingScutiWebViewController!, animated: false)
     }
     @objc public func redirectToUrl(url: URL) {
-        if standalone {
-            if scutiEvents.isStoreReady {
-                openUrl(url: url)
-            } else {
-                urlToRedirectAfterReady = url
-            }
+        if scutiEvents.isStoreReady {
+            openUrl(url: url)
+        } else {
+            urlToRedirectAfterReady = url
         }
     }
     
     private func openUrl(url: URL) {
-        if standalone {
-            let request = URLRequest(url: url)
-            scutiWebview.load(request)
-        }
+        let request = URLRequest(url: url)
+        scutiWebview.load(request)
     }
 }
 extension ScutiSDKManager : WKNavigationDelegate, WKScriptMessageHandlerWithReply {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
-        print("======== received event : \(message.body)")
     }
     
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -122,7 +119,6 @@ extension ScutiSDKManager : WKNavigationDelegate, WKScriptMessageHandlerWithRepl
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url {
             let fullPath = url.absoluteString
-            print("======= decidePolicyFor fullPath : \(fullPath)")
             if fullPath.contains("//itunes.apple.com/") {
                 UIApplication.shared.open(url)
                 decisionHandler(.cancel)
@@ -172,9 +168,6 @@ extension ScutiSDKManager : WKNavigationDelegate, WKScriptMessageHandlerWithRepl
                 delegate?.onUserToken(userToken: token)
                 getNewProductsCommand();
                 getNewRewardsCommand();
-                if standalone {
-                    hideBackToTheGame()
-                }
             }
             break;
         case ScutiStoreMessage.LOG_OUT.rawValue:
@@ -224,9 +217,6 @@ extension ScutiSDKManager : WKNavigationDelegate, WKScriptMessageHandlerWithRepl
             startSession()
             getNewProductsCommand()
             getNewRewardsCommand()
-            if standalone {
-                hideBackToTheGame()
-            }
             scutiEvents.isStoreReady = true
             scutiEventsObjC.isStoreReady = true
             delegate?.onStoreReady()

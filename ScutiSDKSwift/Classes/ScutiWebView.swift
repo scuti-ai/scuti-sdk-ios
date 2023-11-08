@@ -11,7 +11,7 @@ import UIKit
 
 @objc public class ScutiWebView: UIViewController {
     public override var prefersStatusBarHidden: Bool {
-        return ScutiSDKManager.shared.standalone
+        return true
     }
 
     public override func viewDidLoad() {
