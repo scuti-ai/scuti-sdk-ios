@@ -30,9 +30,6 @@ class FullScreenWKWebView: WKWebView {
     private var urlToRedirectAfterReady: URL?
 
     override init() {
-        scutiWebview = FullScreenWKWebView(frame: .zero, configuration: WKWebViewConfiguration())
-    }
-    @objc public func initializeSDK(environment: TargetEnvironment, appId: String) throws {
         let configuration = WKWebViewConfiguration()
 //        configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         configuration.allowsInlineMediaPlayback = true
@@ -46,13 +43,18 @@ class FullScreenWKWebView: WKWebView {
 //        configuration.allowsAirPlayForMediaPlayback = true
 //        configuration.allowsPictureInPictureMediaPlayback = true
 
-        scutiWebview = FullScreenWKWebView(frame: .zero, configuration: configuration)
-        
-        
+        scutiWebview = FullScreenWKWebView(frame: UIScreen.main.bounds, configuration: configuration)
+
         scutiWebview.translatesAutoresizingMaskIntoConstraints = false
         scutiWebview.allowsLinkPreview = true
         scutiWebview.allowsBackForwardNavigationGestures = true
 
+        scutiWebview.isHidden = true
+  
+        scutiWebview.scrollView.contentInsetAdjustmentBehavior = .never
+    }
+    @objc public func initializeSDK(environment: TargetEnvironment, appId: String) throws {
+        scutiWebview.navigationDelegate = self
         if !self.appId.isEmpty {
             throw ScutiError.alreadyInitialized
         }
@@ -69,10 +71,8 @@ class FullScreenWKWebView: WKWebView {
         loadWebViewData()
     }
     private func loadWebViewData() {
-        scutiWebview.navigationDelegate = self
         let url = targetEnvironment.url(id: appId, scutiToken: scutiEvents.userToken)
         let request = URLRequest(url: url)
-        scutiWebview.isHidden = true
         scutiWebview.load(request)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
