@@ -67,3 +67,6 @@ public struct ScutiExchangeModel: Decodable {
 
     func onErrorOccurred(error: Error)
 }
+@objc public protocol ScutiSDKManagerLogDelegate {
+    @objc func onLog(log: String)
+}

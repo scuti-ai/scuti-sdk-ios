@@ -30,11 +30,11 @@ extension TargetEnvironment {
         switch (self)
         {
         case TargetEnvironment.development:
-            result = "https://dev.run.app.scuti.store/?gameId=\(id)&platform=Unity"
+            result = "\(webLink())?gameId=\(id)&platform=Unity"
         case TargetEnvironment.staging:
-            result =  "https://staging.run.app.scuti.store/?gameId=\(id)&platform=Unity"
+            result =  "\(webLink())?gameId=\(id)&platform=Unity"
         case TargetEnvironment.production:
-            result = "https://store.scutishopping.com/?gameId=\(id)&platform=Unity"
+            result = "\(webLink())?gameId=\(id)&platform=Unity"
         }
         let defaults = UserDefaults.standard
         if let scutiToken = defaults.string(forKey: "scuti_token") {
@@ -42,6 +42,17 @@ extension TargetEnvironment {
         }
         
         return URL(string: result)!;
+    }
+    public func webLink() -> String {
+        switch (self)
+        {
+        case TargetEnvironment.development:
+            return "https://dev.run.app.scuti.store/"
+        case TargetEnvironment.staging:
+            return "https://staging.run.app.scuti.store/"
+        case TargetEnvironment.production:
+            return "https://store.scutishopping.com/"
+        }
     }
 }
 
