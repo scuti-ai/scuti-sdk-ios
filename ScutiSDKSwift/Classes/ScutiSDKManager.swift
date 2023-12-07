@@ -17,9 +17,11 @@ class FullScreenWKWebView: WKWebView {
     @objc public static let shared = ScutiSDKManager()
 
     @objc public var delegate: ScutiSDKManagerDelegate?
+    @objc public var logDelegate: ScutiSDKManagerLogDelegate?
     
-    var targetEnvironment: TargetEnvironment = .development
-    var appId: String = ""
+    public var targetEnvironment: TargetEnvironment = .development
+    public var appId: String = ""
+    public var needRedirect: Bool = false
     public var scutiWebview : WKWebView
 
     @ObservedObject public var scutiEvents = ScutiModel()
@@ -84,14 +86,17 @@ class FullScreenWKWebView: WKWebView {
     }
     @objc public func showScutiWebView(viewController: UIViewController) {
         if showingScutiWebViewController != nil {
-            return
+            showingScutiWebViewController?.dismiss(animated: false)
+            showingScutiWebViewController = nil
         }
         toggleStore(true)
         scutiWebview.removeFromSuperview()
         scutiWebview.isHidden = false
         showingScutiWebViewController = ScutiWebView()
-        showingScutiWebViewController?.modalPresentationStyle = .fullScreen
-        viewController.present(showingScutiWebViewController!, animated: false)
+//        showingScutiWebViewController?.modalPresentationStyle = .fullScreen
+        let navVC = ScutiNavigationController(rootViewController: showingScutiWebViewController!)
+        navVC.modalPresentationStyle = .fullScreen
+        viewController.present(navVC, animated: false)
     }
     @objc public func redirectToUrl(url: URL) {
         if scutiEvents.isStoreReady {
@@ -102,7 +107,23 @@ class FullScreenWKWebView: WKWebView {
     }
     
     private func openUrl(url: URL) {
-        let request = URLRequest(url: url)
+        var newUrl = url
+        var fullPath = url.absoluteString
+        if fullPath.contains("product-offer"), !fullPath.contains("?gameId=") {
+            if #available(iOS 16.0, *) {
+                newUrl.append(queryItems: [URLQueryItem(name: "gameId", value: appId)])
+            } else {
+                if fullPath.contains("?") {
+                    fullPath = "\(fullPath)&gameId=\(appId)"
+                } else {
+                    fullPath = "\(fullPath)?gameId=\(appId)"
+                }
+                if let url = URL(string: fullPath) {
+                    newUrl = url
+                }
+            }
+        }
+        let request = URLRequest(url: newUrl)
         scutiWebview.load(request)
     }
 }
@@ -119,6 +140,15 @@ extension ScutiSDKManager : WKNavigationDelegate, WKScriptMessageHandlerWithRepl
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url {
             let fullPath = url.absoluteString
+            logDelegate?.onLog(log: "=======<\(navigationAction.navigationType.rawValue)>======= decidePolicyFor : \(fullPath)")
+            if needRedirect, fullPath.contains(targetEnvironment.webLink()) && !fullPath.contains("gameId=") {
+                decisionHandler(.cancel)
+                let request = URLRequest(url: targetEnvironment.url(id: appId, scutiToken: scutiEvents.userToken))
+                scutiWebview.load(request)
+                needRedirect = false
+                return
+            } 
+            needRedirect = false
             if fullPath.contains("//itunes.apple.com/") {
                 UIApplication.shared.open(url)
                 decisionHandler(.cancel)
@@ -133,8 +163,38 @@ extension ScutiSDKManager : WKNavigationDelegate, WKScriptMessageHandlerWithRepl
                 }
                 decisionHandler(.cancel)
                 return
-            } else if navigationAction.navigationType == .linkActivated && (navigationAction.targetFrame != nil || !navigationAction.targetFrame!.isMainFrame) {
-                webView.load(navigationAction.request)
+            } else if fullPath.contains("g.doubleclick") {
+                if let vc = scutiWebview.parentViewController {
+                    let adsVC = ScutiAdsWebView()
+                    if let navigationVC = vc.navigationController {
+                        navigationVC.pushViewController(adsVC, animated: false)
+                        adsVC.loadAds(url: url)
+                    } else {
+                        adsVC.modalPresentationStyle = .fullScreen
+                        vc.present(adsVC, animated: false) {
+                            adsVC.loadAds(url: url)
+                        }
+                    }
+                } else if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                }
+                decisionHandler(.cancel)
+                return
+            } else if navigationAction.navigationType == .linkActivated && !(navigationAction.targetFrame?.isMainFrame ?? false) {
+                if let vc = scutiWebview.parentViewController {
+                    let adsVC = ScutiAdsWebView()
+                    if let navigationVC = vc.navigationController {
+                        navigationVC.pushViewController(adsVC, animated: false)
+                        adsVC.loadAds(url: url)
+                    } else {
+                        adsVC.modalPresentationStyle = .fullScreen
+                        vc.present(adsVC, animated: false) {
+                            adsVC.loadAds(url: url)
+                        }
+                    }
+                } else if UIApplication.shared.canOpenURL(url) {
+                    webView.load(navigationAction.request)
+                }
                 decisionHandler(.cancel)
                 return
             } else if let targetFrame = navigationAction.targetFrame, targetFrame.isMainFrame {
