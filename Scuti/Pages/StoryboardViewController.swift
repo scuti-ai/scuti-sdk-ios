@@ -26,6 +26,7 @@ class StoryboardViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         ScutiSDKManager.shared.delegate = self
+        ScutiSDKManager.shared.logDelegate = self
         if ScutiSDKManager.shared.scutiEvents.isStoreReady {
             lblStoreReady.text = "Store Ready : ON"
             lblStoreReady.textColor = .green
@@ -83,4 +84,11 @@ extension StoryboardViewController: ScutiSDKManagerDelegate {
     func onErrorOccurred(error: Error) {
         
     }
+}
+extension StoryboardViewController: ScutiSDKManagerLogDelegate {
+    func onLog(log: String) {
+        print(log)
+    }
+    
+    
 }

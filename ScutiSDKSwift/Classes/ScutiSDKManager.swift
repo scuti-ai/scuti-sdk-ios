@@ -22,7 +22,7 @@ class FullScreenWKWebView: WKWebView {
     public var targetEnvironment: TargetEnvironment = .development
     public var appId: String = ""
     public var needRedirect: Bool = false
-    public var scutiWebview : WKWebView
+    public var scutiWebview : WKWebView = WKWebView()
 
     @ObservedObject public var scutiEvents = ScutiModel()
     @objc public var scutiEventsObjC = ScutiModelObjC()
@@ -32,13 +32,45 @@ class FullScreenWKWebView: WKWebView {
     private var urlToRedirectAfterReady: URL?
 
     override init() {
+    }
+    @objc public func initializeSDK(environment: TargetEnvironment, appId: String) throws {
         let configuration = WKWebViewConfiguration()
-//        configuration.defaultWebpagePreferences.allowsContentJavaScript = true
+        let userContentController = WKUserContentController()
+        userContentController.add(self, name: "unityControl")
+        let script = WKUserScript(source: """
+        (function() { \
+            var meta = document.querySelector('meta[name=viewport]'); \
+            if (meta == null) { \
+                meta = document.createElement('meta'); \
+                meta.name = 'viewport'; \
+            } \
+            meta.content += ((meta.content.length > 0) ? ',' : '') + 'user-scalable=no'; \
+            var head = document.getElementsByTagName('head')[0]; \
+            head.appendChild(meta); \
+        })(); 
+        """, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+//        let script = WKUserScript(source: """
+//        (function() {
+//            var meta = document.querySelector('meta[name=viewport]');
+//            if (meta == null) {
+//                meta = document.createElement('meta');
+//                meta.name = 'viewport';
+//            }
+//            meta.content += ((meta.content.length > 0) ? ',' : '') + 'user-scalable=no';
+//            var head = document.getElementsByTagName('head')[0];
+//            head.appendChild(meta);
+//        })();
+//        """, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        userContentController.addUserScript(script)
+        configuration.userContentController = userContentController
+
+        
+//        configuration.defaultWebpagePreferences.allowsContentJavaScript = false
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
         configuration.websiteDataStore = .default()
         configuration.defaultWebpagePreferences.preferredContentMode = .recommended;
-        configuration.processPool = WKProcessPool()
+//        configuration.processPool = WKProcessPool()
         configuration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         configuration.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
 
@@ -54,9 +86,12 @@ class FullScreenWKWebView: WKWebView {
         scutiWebview.isHidden = true
   
         scutiWebview.scrollView.contentInsetAdjustmentBehavior = .never
-    }
-    @objc public func initializeSDK(environment: TargetEnvironment, appId: String) throws {
+        scutiWebview.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
         scutiWebview.navigationDelegate = self
+        scutiWebview.uiDelegate = self
+        
+
         if !self.appId.isEmpty {
             throw ScutiError.alreadyInitialized
         }
@@ -127,20 +162,67 @@ class FullScreenWKWebView: WKWebView {
         scutiWebview.load(request)
     }
 }
-extension ScutiSDKManager : WKNavigationDelegate, WKScriptMessageHandlerWithReply {
-    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
+extension ScutiSDKManager : WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        print("======== userContentController : \(message.body)")
+        if let strMessage = message.body as? String {
+            messageFromJS(message: strMessage)
+        }
     }
+    
+//    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
+//        print("======== userContentController : \(message.body)")
+//    }
+//    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) async -> (Any?, String?) {
+//        
+//    }
     
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
 
         let js = "window.Unity = { call: function(msg) { window.location = 'unity:' + msg; }  };";
-        webView.evaluateJavaScript(js)
+//        let js = """
+//        (function() {
+//            var meta = document.querySelector('meta[name=viewport]');
+//            if (meta == null) {
+//                meta = document.createElement('meta');
+//                meta.name = 'viewport';
+//            }
+//            meta.content += ((meta.content.length > 0) ? ',' : '') + 'user-scalable=no';
+//            var head = document.getElementsByTagName('head')[0];
+//            head.appendChild(meta);
+//        })();
+//        """
+//                let js = """
+//        if (window && window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.unityControl) {
+//             window.Unity = {
+//                 call: function(msg) {
+//                     window.webkit.messageHandlers.unityControl.postMessage(msg);
+//                 }
+//             }
+//         } else {
+//             window.Unity = {
+//                 call: function(msg) {
+//                     window.location = 'unity:' + msg;
+//                 }
+//             }
+//         }
+//        """;
+        webView.evaluateJavaScript(js) { res, error in
+            print("evaluateJavaScript : \(res)  : \(error)")
+        }
 
     }
+//    public func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+//        print("======== userContentController  createWebViewWith : \(navigationAction.request)")
+//        if (!(navigationAction.targetFrame?.isMainFrame ?? false)) {
+//            webView.load(navigationAction.request)
+//        }
+//        return nil
+//    }
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url {
             let fullPath = url.absoluteString
-            logDelegate?.onLog(log: "=======<\(navigationAction.navigationType.rawValue)>======= decidePolicyFor : \(fullPath)")
+            logDelegate?.onLog(log: "=======<\(navigationAction.navigationType.rawValue) : \(navigationAction.targetFrame?.isMainFrame ?? false)>======= decidePolicyFor : \(fullPath)")
             if needRedirect, fullPath.contains(targetEnvironment.webLink()) && !fullPath.contains("gameId=") {
                 decisionHandler(.cancel)
                 let request = URLRequest(url: targetEnvironment.url(id: appId, scutiToken: scutiEvents.userToken))
@@ -154,7 +236,7 @@ extension ScutiSDKManager : WKNavigationDelegate, WKScriptMessageHandlerWithRepl
                 decisionHandler(.cancel)
                 return
             } else if fullPath.starts(with: "unity:") {
-                messageFromJS(webView:webView, message: fullPath.replacingOccurrences(of: "unity:", with: ""))
+                messageFromJS(message: fullPath.replacingOccurrences(of: "unity:", with: "").removingPercentEncoding!)
                 decisionHandler(.cancel)
                 return
             } else if !fullPath.starts(with: "about:blank") && !fullPath.starts(with: "file:") && !fullPath.starts(with: "http:") && !fullPath.starts(with: "https:") {
@@ -163,7 +245,7 @@ extension ScutiSDKManager : WKNavigationDelegate, WKScriptMessageHandlerWithRepl
                 }
                 decisionHandler(.cancel)
                 return
-            } else if fullPath.contains("g.doubleclick") {
+            } else if fullPath.lowercased().contains("g.doubleclick"), fullPath.lowercased().contains("adurl=") {
                 if let vc = scutiWebview.parentViewController {
                     let adsVC = ScutiAdsWebView()
                     if let navigationVC = vc.navigationController {
@@ -203,10 +285,19 @@ extension ScutiSDKManager : WKNavigationDelegate, WKScriptMessageHandlerWithRepl
         }
         decisionHandler(.allow)
     }
-    private func messageFromJS(webView:WKWebView, message:String)
+    public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse) async -> WKNavigationResponsePolicy {
+        
+        return .allow
+    }
+    public func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+//        var disposition: URLSession.AuthChallengeDisposition?
+//        var credential: URLCredential?
+//        if (basicau)
+        completionHandler(.performDefaultHandling, nil)
+    }
+    private func messageFromJS(message:String)
     {
-        let encoded = message.removingPercentEncoding!;
-        let data = encoded.data(using: .utf8)!
+        let data = message.data(using: .utf8)!
         
         let jsonData = try? JSONSerialization.jsonObject(with: data, options: [])
         
