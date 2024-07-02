@@ -135,9 +135,12 @@ class FullScreenWKWebView: WKWebView {
     }
     @objc public func redirectToUrl(url: URL) {
         if scutiEvents.isStoreReady {
-            openUrl(url: url)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.openUrl(url: url)
+            }
         } else {
             urlToRedirectAfterReady = url
+            logDelegate?.onLog(log: "======= launched by url and saving for future : \(url)")
         }
     }
     
@@ -161,15 +164,63 @@ class FullScreenWKWebView: WKWebView {
         let request = URLRequest(url: newUrl)
         scutiWebview.load(request)
     }
+    func didHandleClickBehavior(
+          url: URL,
+          currentDomain: String,
+          targetDomain: String,
+          navigationAction: WKNavigationAction) -> Bool {
+        // Check if the navigationType is a link with an href attribute or
+        // if the target of the navigation is a new window.
+        guard navigationAction.navigationType == .linkActivated ||
+          navigationAction.targetFrame == nil,
+          // If the current domain does not equal the target domain,
+          // the assumption is the user is navigating away from the site.
+          currentDomain != targetDomain else { return false }
+
+        // 4.  Open the URL in a SFSafariViewController.
+//        let safariViewController = SFSafariViewController(url: url)
+//        present(safariViewController, animated: true)
+              if let vc = scutiWebview.parentViewController {
+                  logDelegate?.onLog(log: "=======*************************** Opening Ads view 3 : \(url)")
+                  let adsVC = ScutiAdsWebView()
+                  if let navigationVC = vc.navigationController {
+                      navigationVC.pushViewController(adsVC, animated: false)
+                      adsVC.loadAds(url: url)
+                  } else {
+                      adsVC.modalPresentationStyle = .fullScreen
+                      vc.present(adsVC, animated: false) {
+                          adsVC.loadAds(url: url)
+                      }
+                  }
+              } else if UIApplication.shared.canOpenURL(url) {
+                  UIApplication.shared.open(url)
+              }
+        return true
+      }
 }
 extension ScutiSDKManager : WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        print("======== userContentController : \(message.body)")
         if let strMessage = message.body as? String {
             messageFromJS(message: strMessage)
         }
     }
-    
+    public func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        logDelegate?.onLog(log: "+++++++++++++++ createWebViewWith <\(navigationAction.navigationType.rawValue) : \(navigationAction.targetFrame?.isMainFrame)> \(navigationAction.request.url)")
+        guard let url = navigationAction.request.url,
+              let currentDomain = webView.url?.host,
+                let targetDomain = url.host else { return nil }
+
+            // 3. Determine whether to optimize the behavior of the click URL.
+            if didHandleClickBehavior(
+                url: url,
+                currentDomain: currentDomain,
+                targetDomain: targetDomain,
+                navigationAction: navigationAction) {
+              print("URL opened in SFSafariViewController.")
+            }
+
+            return nil
+    }
 //    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
 //        print("======== userContentController : \(message.body)")
 //    }
@@ -222,7 +273,7 @@ extension ScutiSDKManager : WKNavigationDelegate, WKUIDelegate, WKScriptMessageH
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url {
             let fullPath = url.absoluteString
-            logDelegate?.onLog(log: "=======<\(navigationAction.navigationType.rawValue) : \(navigationAction.targetFrame?.isMainFrame ?? false)>======= decidePolicyFor : \(fullPath)")
+            logDelegate?.onLog(log: "=======<\(navigationAction.navigationType.rawValue) : \(navigationAction.targetFrame?.isMainFrame)>======= decidePolicyFor : \(fullPath)")
             if needRedirect, fullPath.contains(targetEnvironment.webLink()) && !fullPath.contains("gameId=") {
                 decisionHandler(.cancel)
                 let request = URLRequest(url: targetEnvironment.url(id: appId, scutiToken: scutiEvents.userToken))
@@ -230,6 +281,7 @@ extension ScutiSDKManager : WKNavigationDelegate, WKUIDelegate, WKScriptMessageH
                 needRedirect = false
                 return
             } 
+            
             needRedirect = false
             if fullPath.contains("//itunes.apple.com/") {
                 UIApplication.shared.open(url)
@@ -245,8 +297,9 @@ extension ScutiSDKManager : WKNavigationDelegate, WKUIDelegate, WKScriptMessageH
                 }
                 decisionHandler(.cancel)
                 return
-            } else if fullPath.lowercased().contains("g.doubleclick"), fullPath.lowercased().contains("adurl=") {
+            } else if (fullPath.lowercased().contains("g.doubleclick") && fullPath.lowercased().contains("adurl=")) { ///  || (fullPath.lowercased().contains("burl="))
                 if let vc = scutiWebview.parentViewController {
+                    logDelegate?.onLog(log: "=======*************************** Opening Ads view 1")
                     let adsVC = ScutiAdsWebView()
                     if let navigationVC = vc.navigationController {
                         navigationVC.pushViewController(adsVC, animated: false)
@@ -264,6 +317,7 @@ extension ScutiSDKManager : WKNavigationDelegate, WKUIDelegate, WKScriptMessageH
                 return
             } else if navigationAction.navigationType == .linkActivated && !(navigationAction.targetFrame?.isMainFrame ?? false) {
                 if let vc = scutiWebview.parentViewController {
+                    logDelegate?.onLog(log: "=======*************************** Opening Ads view 2")
                     let adsVC = ScutiAdsWebView()
                     if let navigationVC = vc.navigationController {
                         navigationVC.pushViewController(adsVC, animated: false)
@@ -414,7 +468,10 @@ extension ScutiSDKManager {
     {
         scutiWebview.evaluateJavaScript("hideBackToTheGame();")
         if let urlToRedirectAfterReady = urlToRedirectAfterReady {
-            openUrl(url: urlToRedirectAfterReady)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.openUrl(url: urlToRedirectAfterReady)
+            }
+            self.urlToRedirectAfterReady = nil
         }
     }
 
